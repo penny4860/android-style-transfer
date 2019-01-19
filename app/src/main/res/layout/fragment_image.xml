@@ -1,14 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ImageFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/imageView"
+        android:scaleType="fitCenter"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="450dp"
+        android:src="@drawable/mouse"/>
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/control"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:layout_alignParentBottom="true"
+        android:background="#3b36ce">
+
+        <TextView android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="80dp"
+            android:textColor="#FFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+</RelativeLayout>
