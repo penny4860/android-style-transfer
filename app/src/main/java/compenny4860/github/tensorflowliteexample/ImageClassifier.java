@@ -118,37 +118,10 @@ public class ImageClassifier {
         long endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "Timecost to run model inference: " + Long.toString(endTime - startTime));
 
-        // smooth the results
-        applyFilter();
-
         // print the results
         String textToShow = printTopKLabels();
         textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
         return textToShow;
-    }
-
-    void applyFilter(){
-        int num_labels =  labelList.size();
-
-        // Low pass filter `labelProbArray` into the first stage of the filter.
-        for(int j=0; j<num_labels; ++j){
-            filterLabelProbArray[0][j] += FILTER_FACTOR*(labelProbArray[0][j] -
-                    filterLabelProbArray[0][j]);
-        }
-        // Low pass filter each stage into the next.
-        for (int i=1; i<FILTER_STAGES; ++i){
-            for(int j=0; j<num_labels; ++j){
-                filterLabelProbArray[i][j] += FILTER_FACTOR*(
-                        filterLabelProbArray[i-1][j] -
-                                filterLabelProbArray[i][j]);
-
-            }
-        }
-
-        // Copy the last stage filter output back to `labelProbArray`.
-        for(int j=0; j<num_labels; ++j){
-            labelProbArray[0][j] = filterLabelProbArray[FILTER_STAGES-1][j];
-        }
     }
 
     /** Closes tflite to release resources. */
