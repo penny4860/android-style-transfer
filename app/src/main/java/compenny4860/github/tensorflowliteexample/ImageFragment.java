@@ -25,6 +25,8 @@ public class ImageFragment extends Fragment {
     private static final String TAG = "TfLiteImageClassifier";
     private ImageView imageView ;
 
+    private StyleTransfer styleTransfer;
+
     public ImageFragment() {
         // Required empty public constructor
     }
@@ -50,7 +52,7 @@ public class ImageFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            classifier = new ImageClassifier(getActivity());
+            styleTransfer = new StyleTransfer(getActivity());
             classifyFrame();
 
         } catch (IOException e) {
@@ -60,19 +62,17 @@ public class ImageFragment extends Fragment {
 
     /** Classifies a frame from the preview stream. */
     private void classifyFrame() {
-        if (classifier == null || getActivity() == null)
-        {
-            Log.d(TAG, "Uninitialized Classifier or invalid context.");
-            return;
-        }
+
+        Log.d(TAG, "Running.");
 
         Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
-        bitmap = Bitmap.createScaledBitmap(bitmap, 224, 224, true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
 
-        String textToShow = classifier.classifyFrame(bitmap);
-        bitmap.recycle();
-        Log.d(TAG, textToShow);
-        textView.setText(textToShow);
+        float[] styleValues = new float[styleTransfer.NUM_STYLES];
+        styleValues[0] = 1.0f;
+        styleTransfer.run(bitmap, styleValues);
+
+        imageView.setImageBitmap(bitmap);
     }
 
 
