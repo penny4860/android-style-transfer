@@ -9,7 +9,8 @@ import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 public class StyleTransfer {
 
     private TensorFlowInferenceInterface inferenceInterface;
-    private static final String MODEL_FILE = "file:///android_asset/stylize_quantized.pb";
+    private static final String MODEL_FILE = "stylize_quantized.pb";
+
     private static final String INPUT_NODE = "input";
     private static final String STYLE_NODE = "style_num";
     private static final String OUTPUT_NODE = "transformer/expand/conv3/conv/Sigmoid";
