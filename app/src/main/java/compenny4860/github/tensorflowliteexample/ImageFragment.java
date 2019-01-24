@@ -95,7 +95,10 @@ public class ImageFragment extends Fragment {
         }
         else
         {
-            bitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
+            int size = 256;
+            styleTransfer.setSize(size);
+
+            bitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
             float[] styleValues = new float[styleTransfer.NUM_STYLES];
             styleValues[styleIndex] = 1.0f;
             styleTransfer.run(bitmap, styleValues);
