@@ -26,6 +26,7 @@ public class ImageFragment extends Fragment {
     private ImageView styleImageView ;
     private ImageView styleView0;
     private ImageView styleView1;
+    private ImageView styleView2;
 
     public ImageFragment() {
         // Required empty public constructor
@@ -46,10 +47,13 @@ public class ImageFragment extends Fragment {
         imageView = v.findViewById(R.id.imageView);
         styleView0 = v.findViewById(R.id.styleView0);
         styleView1 = v.findViewById(R.id.styleView1);
+        styleView2 = v.findViewById(R.id.styleView2);
 
         imageView.setOnClickListener(new StyleListener(-1));
         styleView0.setOnClickListener(new StyleListener(0));
         styleView1.setOnClickListener(new StyleListener(1));
+        styleView2.setOnClickListener(new StyleListener(2));
+
         return v;
     }
 
