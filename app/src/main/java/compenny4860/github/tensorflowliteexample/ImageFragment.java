@@ -24,6 +24,7 @@ public class ImageFragment extends Fragment {
     private ImageClassifier classifier;
     private static final String TAG = "TfLiteImageClassifier";
     private ImageView imageView ;
+    private ImageView styleImageView ;
 
     private StyleTransfer styleTransfer;
 
@@ -42,7 +43,7 @@ public class ImageFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         imageView = v.findViewById(R.id.imageView);
-//        imageView.setImageResource(R.drawable.mouse);
+        styleImageView = v.findViewById(R.id.styleImageView);
         textView = v.findViewById(R.id.textView);
 
         return v;
@@ -71,8 +72,7 @@ public class ImageFragment extends Fragment {
         float[] styleValues = new float[styleTransfer.NUM_STYLES];
         styleValues[0] = 1.0f;
         styleTransfer.run(bitmap, styleValues);
-
-        imageView.setImageBitmap(bitmap);
+        styleImageView.setImageBitmap(bitmap);
     }
 
 
