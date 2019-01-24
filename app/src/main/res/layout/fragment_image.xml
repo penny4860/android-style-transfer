@@ -10,13 +10,6 @@
         android:layout_height="450dp"
         android:src="@drawable/dog"/>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:scaleType="fitCenter"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/dog"/>
-
     <FrameLayout
         android:id="@+id/control"
         android:layout_width="match_parent"
@@ -24,13 +17,12 @@
         android:layout_alignParentBottom="true"
         android:background="#3b36ce">
 
-        <TextView android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="80dp"
-            android:textColor="#FFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:scaleType="fitCenter"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/dog"/>
 
     </FrameLayout>
 

@@ -20,7 +20,6 @@ import java.io.IOException;
  */
 public class ImageFragment extends Fragment {
 
-    private TextView textView;
     private ImageClassifier classifier;
     private static final String TAG = "TfLiteImageClassifier";
     private ImageView imageView ;
@@ -44,8 +43,6 @@ public class ImageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         imageView = v.findViewById(R.id.imageView);
         styleImageView = v.findViewById(R.id.styleImageView);
-        textView = v.findViewById(R.id.textView);
-
         return v;
     }
     /** Load the model and labels. */
