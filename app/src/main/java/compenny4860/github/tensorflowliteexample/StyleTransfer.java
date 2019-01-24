@@ -32,6 +32,7 @@ public class StyleTransfer {
     }
 
     public void setSize(int desiredSize) {
+        //Todo: desiredSize가 기존 value와 다를 때만 array를 새로 생성
         floatValues = new float[desiredSize * desiredSize * 3];
         intValues = new int[desiredSize * desiredSize];
     }
