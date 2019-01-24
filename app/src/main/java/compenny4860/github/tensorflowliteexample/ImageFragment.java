@@ -49,7 +49,7 @@ public class ImageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             styleTransfer = new StyleTransfer(getActivity());
-            styleTransfer();
+            runTransfer();
 
         } catch (IOException e) {
             Log.e(TAG, "Failed to initialize an image classifier.");
@@ -57,7 +57,7 @@ public class ImageFragment extends Fragment {
     }
 
     /** Classifies a frame from the preview stream. */
-    private void styleTransfer() {
+    private void runTransfer() {
 
         Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
         int original_w = bitmap.getWidth();
