@@ -20,12 +20,10 @@ import java.io.IOException;
  */
 public class ImageFragment extends Fragment {
 
-    private ImageClassifier classifier;
+    private StyleTransfer styleTransfer;
     private static final String TAG = "TfLiteImageClassifier";
     private ImageView imageView ;
     private ImageView styleImageView ;
-
-    private StyleTransfer styleTransfer;
 
     public ImageFragment() {
         // Required empty public constructor
@@ -51,7 +49,7 @@ public class ImageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             styleTransfer = new StyleTransfer(getActivity());
-            classifyFrame();
+            styleTransfer();
 
         } catch (IOException e) {
             Log.e(TAG, "Failed to initialize an image classifier.");
@@ -59,7 +57,7 @@ public class ImageFragment extends Fragment {
     }
 
     /** Classifies a frame from the preview stream. */
-    private void classifyFrame() {
+    private void styleTransfer() {
 
         Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
         int original_w = bitmap.getWidth();
