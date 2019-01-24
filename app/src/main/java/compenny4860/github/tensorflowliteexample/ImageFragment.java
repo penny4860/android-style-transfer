@@ -41,14 +41,15 @@ public class ImageFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_image, container, false);
-        imageView = v.findViewById(R.id.imageView);
         styleImageView = v.findViewById(R.id.styleImageView);
 
+        imageView = v.findViewById(R.id.imageView);
         styleView0 = v.findViewById(R.id.styleView0);
-        styleView0.setOnClickListener(new StyleListener(0));
         styleView1 = v.findViewById(R.id.styleView1);
-        styleView1.setOnClickListener(new StyleListener(1));
 
+        imageView.setOnClickListener(new StyleListener(-1));
+        styleView0.setOnClickListener(new StyleListener(0));
+        styleView1.setOnClickListener(new StyleListener(1));
         return v;
     }
 
@@ -88,13 +89,18 @@ public class ImageFragment extends Fragment {
 
         Log.d(TAG, "Running." + original_h + ", " + original_w);
 
-        bitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
+        if (styleIndex == -1)
+        {
 
-        float[] styleValues = new float[styleTransfer.NUM_STYLES];
-        styleValues[styleIndex] = 1.0f;
-        styleTransfer.run(bitmap, styleValues);
-        bitmap = Bitmap.createScaledBitmap(bitmap, original_w, original_h, true);
-
+        }
+        else
+        {
+            bitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
+            float[] styleValues = new float[styleTransfer.NUM_STYLES];
+            styleValues[styleIndex] = 1.0f;
+            styleTransfer.run(bitmap, styleValues);
+            bitmap = Bitmap.createScaledBitmap(bitmap, original_w, original_h, true);
+        }
         styleImageView.setImageBitmap(bitmap);
     }
 
