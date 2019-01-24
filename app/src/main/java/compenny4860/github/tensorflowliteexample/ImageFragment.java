@@ -64,14 +64,19 @@ public class ImageFragment extends Fragment {
     /** Classifies a frame from the preview stream. */
     private void classifyFrame() {
 
-        Log.d(TAG, "Running.");
-
         Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
+        int original_w = bitmap.getWidth();
+        int original_h = bitmap.getHeight();
+
+        Log.d(TAG, "Running." + original_h + ", " + original_w);
+
         bitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
 
         float[] styleValues = new float[styleTransfer.NUM_STYLES];
         styleValues[0] = 1.0f;
         styleTransfer.run(bitmap, styleValues);
+        bitmap = Bitmap.createScaledBitmap(bitmap, original_w, original_h, true);
+
         styleImageView.setImageBitmap(bitmap);
     }
 
