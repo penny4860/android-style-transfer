@@ -23,6 +23,28 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:src="@drawable/dog"/>
+        <ImageView
+            android:id="@+id/styleView0"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="100dp"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/style0"/>
+        <ImageView
+            android:id="@+id/styleView1"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="200dp"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/style1"/>
+        <ImageView
+            android:id="@+id/styleView2"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="300dp"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/style2"/>
+
 
     </FrameLayout>
 
