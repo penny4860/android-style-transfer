@@ -58,6 +58,7 @@ public class ImageFragment extends Fragment {
         // 1. recycler view.
         mRecyclerView = v.findViewById(R.id.recyclerview);
         // 2. adapter
+        // Todo : 본 객체를 넘기지 말고 옵저버패턴으로 바꿔보자.
         mAdapter = new ImageListAdapter(getActivity(), mFileList, this);
         // 3. Link (view -> adaptor)
         mRecyclerView.setAdapter(mAdapter);
