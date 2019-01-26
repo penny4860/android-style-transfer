@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +23,17 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
     private LinkedList<String> mFileList;
     private LayoutInflater mInflater;
     private Context mContext;
+    private ImageFragment mImageFragment;
 
     // 1. Adapter의 constructor 구현
     //      1) layout inflator : resource에서 정의한 view를 가져와서 element view를 설정
     //      2) dataset : ListView에 표시할 data 설정
-    public ImageListAdapter(Context context, LinkedList<String> fileList)
+    public ImageListAdapter(Context context, LinkedList<String> fileList, ImageFragment imageFragment)
     {
         mInflater = LayoutInflater.from(context);
         mFileList = fileList;
         mContext = context;
+        mImageFragment = imageFragment;
     }
 
     // 2. Element View(ViewHolder) 가 생성될때 실행되는 method
@@ -76,7 +79,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         public void onClick(View view) {
             // Get the position of the item that was clicked.
             int mPosition = getLayoutPosition();
-            Toast.makeText(mContext, mPosition + " clicked", Toast.LENGTH_LONG).show();
+            // Toast.makeText(mContext, mPosition + " clicked", Toast.LENGTH_LONG).show();
+
+            Bitmap bitmap = null;
+            try {
+                bitmap = getImage(mFileList.get(0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mImageFragment.runTransfer(bitmap, mPosition-1);
         }
     }
 

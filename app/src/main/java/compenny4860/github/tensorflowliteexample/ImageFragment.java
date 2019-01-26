@@ -53,12 +53,12 @@ public class ImageFragment extends Fragment {
         /////////////////////////////////////////////////////////////////////////////////////////
         mFileList.addLast("dog.jpg");
         for (int i = 1; i < 27; i++) {
-            mFileList.addLast("style" + i + ".jpg");
+            mFileList.addLast("style" + (i-1) + ".jpg");
         }
         // 1. recycler view.
         mRecyclerView = v.findViewById(R.id.recyclerview);
         // 2. adapter
-        mAdapter = new ImageListAdapter(getActivity(), mFileList);
+        mAdapter = new ImageListAdapter(getActivity(), mFileList, this);
         // 3. Link (view -> adaptor)
         mRecyclerView.setAdapter(mAdapter);
         // 4. item들이 표시되는 layout 설정
@@ -67,21 +67,6 @@ public class ImageFragment extends Fragment {
         mRecyclerView.setLayoutManager(horizontalLayoutManagaer);
         /////////////////////////////////////////////////////////////////////////////////////////
         return v;
-    }
-
-    class StyleListener implements View.OnClickListener {
-
-        private int mStyleIndex;
-
-        public StyleListener(int styleIndex)
-        {
-            mStyleIndex = styleIndex;
-        }
-
-        @Override
-        public void onClick(View v) {
-            runTransfer(mStyleIndex);
-        }
     }
 
     /** Load the model and labels. */
@@ -97,11 +82,11 @@ public class ImageFragment extends Fragment {
     }
 
     /** Classifies a frame from the preview stream. */
-    private void runTransfer(int styleIndex) {
+    public void runTransfer(Bitmap contentBitmap, int styleIndex) {
 
-        Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
-        int original_w = bitmap.getWidth();
-        int original_h = bitmap.getHeight();
+        // Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
+        int original_w = contentBitmap.getWidth();
+        int original_h = contentBitmap.getHeight();
 
         Log.d(TAG, "Running." + original_h + ", " + original_w);
 
@@ -114,13 +99,13 @@ public class ImageFragment extends Fragment {
             int size = 256;
             styleTransfer.setSize(size);
 
-            bitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
+            contentBitmap = Bitmap.createScaledBitmap(contentBitmap, size, size, true);
             float[] styleValues = new float[styleTransfer.NUM_STYLES];
             styleValues[styleIndex] = 1.0f;
-            styleTransfer.run(bitmap, styleValues);
-            bitmap = Bitmap.createScaledBitmap(bitmap, original_w, original_h, true);
+            styleTransfer.run(contentBitmap, styleValues);
+            contentBitmap = Bitmap.createScaledBitmap(contentBitmap, original_w, original_h, true);
         }
-        styleImageView.setImageBitmap(bitmap);
+        styleImageView.setImageBitmap(contentBitmap);
     }
 
 
