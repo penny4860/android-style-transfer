@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,11 +25,14 @@ public class ImageFragment extends Fragment {
 
     private StyleTransfer styleTransfer;
     private static final String TAG = "TfLiteImageClassifier";
-    private ImageView imageView ;
     private ImageView styleImageView ;
-    private ImageView styleView0;
-    private ImageView styleView1;
-    private ImageView styleView2;
+
+    /////////////////////////////////////////////////////////////////////////////////
+    private final LinkedList<String> mFileList = new LinkedList<>();
+    private RecyclerView mRecyclerView;
+    private ImageListAdapter mAdapter;
+    /////////////////////////////////////////////////////////////////////////////////
+
 
     public ImageFragment() {
         // Required empty public constructor
@@ -44,16 +50,22 @@ public class ImageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         styleImageView = v.findViewById(R.id.styleImageView);
 
-        imageView = v.findViewById(R.id.imageView);
-        styleView0 = v.findViewById(R.id.styleView0);
-        styleView1 = v.findViewById(R.id.styleView1);
-        styleView2 = v.findViewById(R.id.styleView2);
-
-        imageView.setOnClickListener(new StyleListener(-1));
-        styleView0.setOnClickListener(new StyleListener(0));
-        styleView1.setOnClickListener(new StyleListener(1));
-        styleView2.setOnClickListener(new StyleListener(2));
-
+        /////////////////////////////////////////////////////////////////////////////////////////
+        mFileList.addLast("dog.jpg");
+        for (int i = 1; i < 27; i++) {
+            mFileList.addLast("style" + i + ".jpg");
+        }
+        // 1. recycler view.
+        mRecyclerView = v.findViewById(R.id.recyclerview);
+        // 2. adapter
+        mAdapter = new ImageListAdapter(getActivity(), mFileList);
+        // 3. Link (view -> adaptor)
+        mRecyclerView.setAdapter(mAdapter);
+        // 4. item들이 표시되는 layout 설정
+        LinearLayoutManager horizontalLayoutManagaer = new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(horizontalLayoutManagaer);
+        /////////////////////////////////////////////////////////////////////////////////////////
         return v;
     }
 
