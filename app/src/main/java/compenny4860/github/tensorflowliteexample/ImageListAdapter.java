@@ -44,13 +44,12 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
     // 3. ViewHolder 가 서로 바인딩될 때 : index를 얻어서 뷰에 데이터를 설정
     @Override
     public void onBindViewHolder(ImageListAdapter.ImageViewHolder imageViewHolder, int posIndex) {
-        String mCurrent = mFileList.get(posIndex);
+        String imgFileName = mFileList.get(posIndex);
 
-        imageViewHolder.imageTextView.setText("style" + posIndex + ".jpg");
-        String filename = "style" + posIndex + ".jpg";
+        imageViewHolder.imageTextView.setText(imgFileName);
         Bitmap bitmap = null;
         try {
-            bitmap = getImage(filename);
+            bitmap = getImage(imgFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
