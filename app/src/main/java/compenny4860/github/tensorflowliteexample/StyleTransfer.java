@@ -28,8 +28,8 @@ public class StyleTransfer {
         Log.d(TAG, "Constructor");
         inferenceInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_FILE);
         Log.d(TAG, "Created a TensorFlowInferenceInterface 1");
-        inferenceInterface = new TensorFlowInferenceInterface(activity.getAssets(), "decoder_opt.pb");
-        Log.d(TAG, "Created a TensorFlowInferenceInterface 2");
+//        inferenceInterface = new TensorFlowInferenceInterface(activity.getAssets(), "decoder_opt.pb");
+//        Log.d(TAG, "Created a TensorFlowInferenceInterface 2");
         setSize(256);
 
     }
@@ -40,31 +40,37 @@ public class StyleTransfer {
         intValues = new int[desiredSize * desiredSize];
     }
 
-    public void run(final Bitmap bitmap, float[] styleVals) {
-        Log.d(TAG, "style running");
-//        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-//
-//        for (int i = 0; i < intValues.length; ++i) {
-//            final int val = intValues[i];
-//            floatValues[i * 3] = ((val >> 16) & 0xFF) / 255.0f;
-//            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 255.0f;
-//            floatValues[i * 3 + 2] = (val & 0xFF) / 255.0f;
-//        }
-//        float[] outputValues;
-//        outputValues = new float[32 * 32 * 512];
-//
-//
-//        // Copy the input data into TensorFlow.
-//        inferenceInterface.feed(INPUT_NODE, floatValues,
-//                1, bitmap.getWidth(), bitmap.getHeight(), 3);
-//        //inferenceInterface.feed(STYLE_NODE, styleVals, NUM_STYLES);
-//
-//        // Execute the output node's dependency sub-graph.
-//        inferenceInterface.run(new String[] {OUTPUT_NODE}, false);
-//
-//        // Copy the data from TensorFlow back into our array.
-//        inferenceInterface.fetch(OUTPUT_NODE, outputValues);
+    private void getFloatValues(final Bitmap bitmap) {
+        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
+        for (int i = 0; i < intValues.length; ++i) {
+            final int val = intValues[i];
+            floatValues[i * 3] = ((val >> 16) & 0xFF) / 255.0f;
+            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 255.0f;
+            floatValues[i * 3 + 2] = (val & 0xFF) / 255.0f;
+        }
+    }
+
+    private void getFeatures(final Bitmap bitmap, float featureValues[]) {
+        inferenceInterface.feed(INPUT_NODE, floatValues,
+                1, bitmap.getWidth(), bitmap.getHeight(), 3);
+        inferenceInterface.run(new String[] {OUTPUT_NODE}, false);
+        inferenceInterface.fetch(OUTPUT_NODE, featureValues);
+    }
+
+    public void run(final Bitmap contentBitmap, final Bitmap styleBitmap) {
+        Log.d(TAG, "style running");
+
+        float[] contentFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
+        float[] styleFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
+
+        // 1. Get contentFeatureValues
+        getFloatValues(contentBitmap);
+        getFeatures(contentBitmap, contentFeatureValues);
+
+        // 2. Get styleFeatureValues
+        getFloatValues(styleBitmap);
+        getFeatures(styleBitmap, styleFeatureValues);
 
 //        for (int i = 0; i < intValues.length; ++i) {
 //            intValues[i] =
