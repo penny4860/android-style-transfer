@@ -71,6 +71,7 @@ public class StyleTransfer {
         // 2. Get styleFeatureValues
         getFloatValues(styleBitmap);
         getFeatures(styleBitmap, styleFeatureValues);
+        Log.d(TAG, "encoder running is done");
 
 //        for (int i = 0; i < intValues.length; ++i) {
 //            intValues[i] =
