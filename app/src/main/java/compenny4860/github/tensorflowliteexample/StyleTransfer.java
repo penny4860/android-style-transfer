@@ -27,7 +27,9 @@ public class StyleTransfer {
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
         inferenceInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_FILE);
-        Log.d(TAG, "Created a TensorFlowInferenceInterface");
+        Log.d(TAG, "Created a TensorFlowInferenceInterface 1");
+        inferenceInterface = new TensorFlowInferenceInterface(activity.getAssets(), "decoder_opt.pb");
+        Log.d(TAG, "Created a TensorFlowInferenceInterface 2");
         setSize(256);
 
     }
