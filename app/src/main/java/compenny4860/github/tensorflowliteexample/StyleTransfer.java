@@ -76,12 +76,17 @@ public class StyleTransfer {
         getFeatures(styleBitmap, styleFeatureValues);
         Log.d(TAG, "encoder running is done");
 
+        Log.d(TAG, "content size: " + contentBitmap.getWidth() + ", " + contentBitmap.getHeight() + ", " + contentFeatureValues.length);
+        Log.d(TAG, "style size: " + styleBitmap.getWidth() + ", " + styleBitmap.getHeight() + ", " + styleFeatureValues.length);
+
         decoderInterface.feed("input_c", contentFeatureValues,
                 1, contentBitmap.getWidth()/8, contentBitmap.getHeight()/8, 512);
         decoderInterface.feed("input_s", styleFeatureValues,
                 1, styleBitmap.getWidth()/8, styleBitmap.getHeight()/8, 512);
         decoderInterface.run(new String[] {"output/mul"}, false);
-        decoderInterface.fetch(OUTPUT_NODE, stylized_img);
+        Log.d(TAG, "style size: " + stylized_img.length);
+        Log.d(TAG, "decoder running.......");
+        decoderInterface.fetch("output/mul", stylized_img);
         Log.d(TAG, "decoder running is done");
 
         for (int i = 0; i < intValues.length; ++i) {
