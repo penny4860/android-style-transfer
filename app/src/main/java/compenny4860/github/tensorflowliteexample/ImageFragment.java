@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,11 +25,14 @@ public class ImageFragment extends Fragment {
 
     private StyleTransfer styleTransfer;
     private static final String TAG = "TfLiteImageClassifier";
-    private ImageView imageView ;
     private ImageView styleImageView ;
-    private ImageView styleView0;
-    private ImageView styleView1;
-    private ImageView styleView2;
+
+    /////////////////////////////////////////////////////////////////////////////////
+    private final LinkedList<String> mFileList = new LinkedList<>();
+    private RecyclerView mRecyclerView;
+    private ImageListAdapter mAdapter;
+    /////////////////////////////////////////////////////////////////////////////////
+
 
     public ImageFragment() {
         // Required empty public constructor
@@ -44,32 +50,24 @@ public class ImageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         styleImageView = v.findViewById(R.id.styleImageView);
 
-        imageView = v.findViewById(R.id.imageView);
-        styleView0 = v.findViewById(R.id.styleView0);
-        styleView1 = v.findViewById(R.id.styleView1);
-        styleView2 = v.findViewById(R.id.styleView2);
-
-        imageView.setOnClickListener(new StyleListener(-1));
-        styleView0.setOnClickListener(new StyleListener(0));
-        styleView1.setOnClickListener(new StyleListener(1));
-        styleView2.setOnClickListener(new StyleListener(2));
-
+        /////////////////////////////////////////////////////////////////////////////////////////
+        mFileList.addLast("dog.jpg");
+        for (int i = 1; i < 27; i++) {
+            mFileList.addLast("style" + (i-1) + ".jpg");
+        }
+        // 1. recycler view.
+        mRecyclerView = v.findViewById(R.id.recyclerview);
+        // 2. adapter
+        // Todo : 본 객체를 넘기지 말고 옵저버패턴으로 바꿔보자.
+        mAdapter = new ImageListAdapter(getActivity(), mFileList, this);
+        // 3. Link (view -> adaptor)
+        mRecyclerView.setAdapter(mAdapter);
+        // 4. item들이 표시되는 layout 설정
+        LinearLayoutManager horizontalLayoutManagaer = new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(horizontalLayoutManagaer);
+        /////////////////////////////////////////////////////////////////////////////////////////
         return v;
-    }
-
-    class StyleListener implements View.OnClickListener {
-
-        private int mStyleIndex;
-
-        public StyleListener(int styleIndex)
-        {
-            mStyleIndex = styleIndex;
-        }
-
-        @Override
-        public void onClick(View v) {
-            runTransfer(mStyleIndex);
-        }
     }
 
     /** Load the model and labels. */
@@ -85,11 +83,11 @@ public class ImageFragment extends Fragment {
     }
 
     /** Classifies a frame from the preview stream. */
-    private void runTransfer(int styleIndex) {
+    public void runTransfer(Bitmap contentBitmap, int styleIndex) {
 
-        Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
-        int original_w = bitmap.getWidth();
-        int original_h = bitmap.getHeight();
+        // Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
+        int original_w = contentBitmap.getWidth();
+        int original_h = contentBitmap.getHeight();
 
         Log.d(TAG, "Running." + original_h + ", " + original_w);
 
@@ -102,13 +100,13 @@ public class ImageFragment extends Fragment {
             int size = 256;
             styleTransfer.setSize(size);
 
-            bitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
+            contentBitmap = Bitmap.createScaledBitmap(contentBitmap, size, size, true);
             float[] styleValues = new float[styleTransfer.NUM_STYLES];
             styleValues[styleIndex] = 1.0f;
-            styleTransfer.run(bitmap, styleValues);
-            bitmap = Bitmap.createScaledBitmap(bitmap, original_w, original_h, true);
+            styleTransfer.run(contentBitmap, styleValues);
+            contentBitmap = Bitmap.createScaledBitmap(contentBitmap, original_w, original_h, true);
         }
-        styleImageView.setImageBitmap(bitmap);
+        styleImageView.setImageBitmap(contentBitmap);
     }
 
 
