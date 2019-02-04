@@ -75,13 +75,10 @@ public class ImageFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            Bitmap bitmap = ((BitmapDrawable) (styleImageView.getDrawable())).getBitmap();
-            bitmap = Bitmap.createScaledBitmap(bitmap, 32, 32, true);
-            styleTransfer = new StyleTransfer(getActivity(), bitmap);
-            styleImageView.setImageBitmap(bitmap);
+            styleTransfer = new StyleTransfer(getActivity());
 
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to initialize an image classifier.");
         }
     }
 
