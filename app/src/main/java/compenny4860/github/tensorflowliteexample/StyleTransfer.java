@@ -2,6 +2,7 @@ package compenny4860.github.tensorflowliteexample;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.SystemClock;
 import android.util.Log;
 import java.io.IOException;
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
@@ -64,28 +65,28 @@ public class StyleTransfer {
         float[] contentFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
         float[] styleFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
         float[] stylized_img = new float[contentBitmap.getWidth() * contentBitmap.getHeight() * 3];
+        long startTime, endTime;
 
         // 1. Get contentFeatureValues
+        startTime = SystemClock.uptimeMillis();
         getFloatValues(contentBitmap);
         getFeatures(contentBitmap, contentFeatureValues);
 
         // 2. Get styleFeatureValues
         getFloatValues(styleBitmap);
         getFeatures(styleBitmap, styleFeatureValues);
-        Log.d(TAG, "encoder running is done");
+        endTime = SystemClock.uptimeMillis();
+        Log.d(TAG, "    1. Timecost to extract features: " + Long.toString(endTime - startTime));
 
-        Log.d(TAG, "content size: " + contentBitmap.getWidth() + ", " + contentBitmap.getHeight() + ", " + contentFeatureValues.length);
-        Log.d(TAG, "style size: " + styleBitmap.getWidth() + ", " + styleBitmap.getHeight() + ", " + styleFeatureValues.length);
-
+        startTime = SystemClock.uptimeMillis();
         decoderInterface.feed("input_c", contentFeatureValues,
                 1, contentBitmap.getWidth()/8, contentBitmap.getHeight()/8, 512);
         decoderInterface.feed("input_s", styleFeatureValues,
                 1, styleBitmap.getWidth()/8, styleBitmap.getHeight()/8, 512);
         decoderInterface.run(new String[] {"output/mul"}, false);
-        Log.d(TAG, "style size: " + stylized_img.length);
-        Log.d(TAG, "decoder running.......");
         decoderInterface.fetch("output/mul", stylized_img);
-        Log.d(TAG, "decoder running is done");
+        endTime = SystemClock.uptimeMillis();
+        Log.d(TAG, "    2. Timecost to decoding: " + Long.toString(endTime - startTime));
 
         for (int i = 0; i < intValues.length; ++i) {
             intValues[i] =
