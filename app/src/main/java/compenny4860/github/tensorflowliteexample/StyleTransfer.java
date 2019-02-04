@@ -8,12 +8,14 @@ import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 public class StyleTransfer {
 
-    private TensorFlowInferenceInterface inferenceInterface;
-    private static final String MODEL_FILE = "stylize_quantized.pb";
+    private TensorFlowInferenceInterface encoderInterface;
+    private TensorFlowInferenceInterface decoderInterface;
+
+    private static final String MODEL_FILE = "encoder_opt.pb";
 
     private static final String INPUT_NODE = "input";
     private static final String STYLE_NODE = "style_num";
-    private static final String OUTPUT_NODE = "transformer/expand/conv3/conv/Sigmoid";
+    private static final String OUTPUT_NODE = "output/Relu";
     public static final int NUM_STYLES = 26;
 
     //    private static final int desiredSize = 256;
@@ -25,10 +27,11 @@ public class StyleTransfer {
     private static final String TAG = "StyleTransferDemo";
 
     StyleTransfer(Activity activity) throws IOException {
-        inferenceInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_FILE);
+        Log.d(TAG, "Constructor");
+        encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_FILE);
+        decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), "decoder_opt.pb");
         setSize(256);
-
-        Log.d(TAG, "Created a TensorFlowInferenceInterface");
+        Log.d(TAG, "Tensorflow model initialized");
     }
 
     public void setSize(int desiredSize) {
@@ -37,37 +40,63 @@ public class StyleTransfer {
         intValues = new int[desiredSize * desiredSize];
     }
 
-    public void run(final Bitmap bitmap, float[] styleVals) {
-        Log.d(TAG, "style running");
+    private void getFloatValues(final Bitmap bitmap) {
         bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
         for (int i = 0; i < intValues.length; ++i) {
             final int val = intValues[i];
-            floatValues[i * 3] = ((val >> 16) & 0xFF) / 255.0f;
-            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 255.0f;
-            floatValues[i * 3 + 2] = (val & 0xFF) / 255.0f;
+            floatValues[i * 3] = ((val >> 16) & 0xFF) / 1.0f;
+            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 1.0f;
+            floatValues[i * 3 + 2] = (val & 0xFF) / 1.0f;
         }
+    }
 
-        // Copy the input data into TensorFlow.
-        inferenceInterface.feed(INPUT_NODE, floatValues,
+    private void getFeatures(final Bitmap bitmap, float featureValues[]) {
+        encoderInterface.feed(INPUT_NODE, floatValues,
                 1, bitmap.getWidth(), bitmap.getHeight(), 3);
-        inferenceInterface.feed(STYLE_NODE, styleVals, NUM_STYLES);
+        encoderInterface.run(new String[] {OUTPUT_NODE}, false);
+        encoderInterface.fetch(OUTPUT_NODE, featureValues);
+    }
 
-        // Execute the output node's dependency sub-graph.
-        inferenceInterface.run(new String[] {OUTPUT_NODE}, false);
+    public void run(final Bitmap contentBitmap, final Bitmap styleBitmap) {
+        Log.d(TAG, "style running");
 
-        // Copy the data from TensorFlow back into our array.
-        inferenceInterface.fetch(OUTPUT_NODE, floatValues);
+        float[] contentFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
+        float[] styleFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
+        float[] stylized_img = new float[contentBitmap.getWidth() * contentBitmap.getHeight() * 3];
 
+        // 1. Get contentFeatureValues
+        getFloatValues(contentBitmap);
+        getFeatures(contentBitmap, contentFeatureValues);
+
+        // 2. Get styleFeatureValues
+        getFloatValues(styleBitmap);
+        getFeatures(styleBitmap, styleFeatureValues);
+        Log.d(TAG, "encoder running is done");
+
+        Log.d(TAG, "content size: " + contentBitmap.getWidth() + ", " + contentBitmap.getHeight() + ", " + contentFeatureValues.length);
+        Log.d(TAG, "style size: " + styleBitmap.getWidth() + ", " + styleBitmap.getHeight() + ", " + styleFeatureValues.length);
+
+        decoderInterface.feed("input_c", contentFeatureValues,
+                1, contentBitmap.getWidth()/8, contentBitmap.getHeight()/8, 512);
+        decoderInterface.feed("input_s", styleFeatureValues,
+                1, styleBitmap.getWidth()/8, styleBitmap.getHeight()/8, 512);
+        decoderInterface.run(new String[] {"output/mul"}, false);
+        Log.d(TAG, "style size: " + stylized_img.length);
+        Log.d(TAG, "decoder running.......");
+        decoderInterface.fetch("output/mul", stylized_img);
+        Log.d(TAG, "decoder running is done");
 
         for (int i = 0; i < intValues.length; ++i) {
             intValues[i] =
                     0xFF000000
-                            | (((int) (floatValues[i * 3] * 255)) << 16)
-                            | (((int) (floatValues[i * 3 + 1] * 255)) << 8)
-                            | ((int) (floatValues[i * 3 + 2] * 255));
+                            | (((int) (stylized_img[i * 3])) << 16)
+                            | (((int) (stylized_img[i * 3 + 1])) << 8)
+                            | ((int) (stylized_img[i * 3 + 2]));
         }
-        bitmap.setPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        contentBitmap.setPixels(intValues, 0, contentBitmap.getWidth(), 0, 0, contentBitmap.getWidth(), contentBitmap.getHeight());
+        Log.d(TAG, "set bitmap");
+
     }
 
 }

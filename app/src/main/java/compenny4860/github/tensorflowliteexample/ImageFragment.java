@@ -83,7 +83,7 @@ public class ImageFragment extends Fragment {
     }
 
     /** Classifies a frame from the preview stream. */
-    public void runTransfer(Bitmap contentBitmap, int styleIndex) {
+    public void runTransfer(Bitmap contentBitmap, Bitmap styleBitmap) {
 
         // Bitmap bitmap = ((BitmapDrawable) (imageView.getDrawable())).getBitmap();
         int original_w = contentBitmap.getWidth();
@@ -91,19 +91,14 @@ public class ImageFragment extends Fragment {
 
         Log.d(TAG, "Running." + original_h + ", " + original_w);
 
-        if (styleIndex == -1)
-        {
-
-        }
-        else
         {
             int size = 256;
             styleTransfer.setSize(size);
 
             contentBitmap = Bitmap.createScaledBitmap(contentBitmap, size, size, true);
-            float[] styleValues = new float[styleTransfer.NUM_STYLES];
-            styleValues[styleIndex] = 1.0f;
-            styleTransfer.run(contentBitmap, styleValues);
+            styleBitmap = Bitmap.createScaledBitmap(styleBitmap, size, size, true);
+
+            styleTransfer.run(contentBitmap, styleBitmap);
             contentBitmap = Bitmap.createScaledBitmap(contentBitmap, original_w, original_h, true);
         }
         styleImageView.setImageBitmap(contentBitmap);

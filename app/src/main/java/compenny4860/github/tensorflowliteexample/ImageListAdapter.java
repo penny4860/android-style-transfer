@@ -81,13 +81,16 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
             int mPosition = getLayoutPosition();
             // Toast.makeText(mContext, mPosition + " clicked", Toast.LENGTH_LONG).show();
 
-            Bitmap bitmap = null;
+            Bitmap contentBitmap = null;
+            Bitmap styleBitmap = null;
             try {
-                bitmap = getImage(mFileList.get(0));
+                contentBitmap = getImage(mFileList.get(0));
+                styleBitmap = getImage(mFileList.get(mPosition));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mImageFragment.runTransfer(bitmap, mPosition-1);
+            mImageFragment.runTransfer(contentBitmap, styleBitmap);
         }
     }
 
