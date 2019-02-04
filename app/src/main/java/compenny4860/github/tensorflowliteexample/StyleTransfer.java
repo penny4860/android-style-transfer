@@ -97,9 +97,9 @@ public class StyleTransfer {
 
         for (int i = 0; i < intValues.length; ++i) {
             final int val = intValues[i];
-            floatValues[i * 3] = ((val >> 16) & 0xFF) / 255.0f;
-            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 255.0f;
-            floatValues[i * 3 + 2] = (val & 0xFF) / 255.0f;
+            floatValues[i * 3] = ((val >> 16) & 0xFF) / 1.0f;
+            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 1.0f;
+            floatValues[i * 3 + 2] = (val & 0xFF) / 1.0f;
         }
     }
 
@@ -142,9 +142,9 @@ public class StyleTransfer {
         for (int i = 0; i < intValues.length; ++i) {
             intValues[i] =
                     0xFF000000
-                            | (((int) (stylized_img[i * 3] * 255)) << 16)
-                            | (((int) (stylized_img[i * 3 + 1] * 255)) << 8)
-                            | ((int) (stylized_img[i * 3 + 2] * 255));
+                            | (((int) (stylized_img[i * 3])) << 16)
+                            | (((int) (stylized_img[i * 3 + 1])) << 8)
+                            | ((int) (stylized_img[i * 3 + 2]));
         }
         contentBitmap.setPixels(intValues, 0, contentBitmap.getWidth(), 0, 0, contentBitmap.getWidth(), contentBitmap.getHeight());
         Log.d(TAG, "set bitmap");
