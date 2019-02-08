@@ -87,9 +87,8 @@ if __name__ == "__main__":
     print(type(graph_def))
     input_names = ["input"]
     output_names = ["output/Relu"]
-    transforms = ["strip_unused_nodes"]
+    transforms = ["fold_constants(ignore_errors=true) fold_batch_norms fold_old_batch_norms quantize_weights quantize_nodes sort_by_execution_order"]
     transformed_graph_def = TransformGraph(graph_def, input_names, output_names, transforms)
     # def TransformGraph(input_graph_def, inputs, outputs, transforms):
-
-
+    tf.train.write_graph(transformed_graph_def, "tmp", "encoder_quantized.pb", as_text=False)
 
