@@ -12,7 +12,7 @@ public class StyleTransfer {
     private TensorFlowInferenceInterface encoderInterface;
     private TensorFlowInferenceInterface decoderInterface;
 
-    private static final String MODEL_FILE = "encoder_opt.pb";
+    private static final String MODEL_FILE = "mobile_encoder_opt.pb";
 
     private static final String INPUT_NODE = "input";
     private static final String STYLE_NODE = "style_num";
