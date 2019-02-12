@@ -5,49 +5,8 @@ import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
 import java.io.IOException;
-import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 public class StyleTransfer {
-
-    public class Encoder {
-        private TensorFlowInferenceInterface encoderInterface;
-        private static final String MODEL_ENCODER_FILE = "mobile_encoder_opt.pb";
-        private static final String INPUT_NODE = "input";
-        private static final String OUTPUT_NODE = "output/Relu";
-
-        Encoder(Activity activity) {
-             encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_ENCODER_FILE);
-        }
-
-        public void run(float featureValues[], float floatValues[], int imgSize) {
-            encoderInterface.feed(INPUT_NODE, floatValues,
-                    1, imgSize, imgSize, 3);
-            encoderInterface.run(new String[] {OUTPUT_NODE}, false);
-            encoderInterface.fetch(OUTPUT_NODE, featureValues);
-        }
-    }
-    public class Decoder {
-        private TensorFlowInferenceInterface decoderInterface;
-        private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
-
-        private static final String INPUT_C_NODE = "input_c";
-        private static final String INPUT_S_NODE = "input_s";
-        private static final String OUTPUT_NODE = "output/mul";
-
-        Decoder(Activity activity) {
-            decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
-        }
-
-        public void run(float stylized_img[], float contentFeatureValues[], float styleFeatureValues[], int imgSize) {
-            decoderInterface.feed(INPUT_C_NODE, contentFeatureValues,
-                    1, imgSize, imgSize, 512);
-            decoderInterface.feed(INPUT_S_NODE, styleFeatureValues,
-                    1, imgSize, imgSize, 512);
-            decoderInterface.run(new String[] {OUTPUT_NODE}, false);
-            decoderInterface.fetch(OUTPUT_NODE, stylized_img);
-        }
-    }
-
 
     private static final int DEFAULT_SIZE = 256;
 
