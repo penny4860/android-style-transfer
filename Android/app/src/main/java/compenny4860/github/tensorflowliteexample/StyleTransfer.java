@@ -19,7 +19,7 @@ public class StyleTransfer {
              encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_ENCODER_FILE);
         }
 
-        public void run(float featureValues[], int imgSize) {
+        public void run(float featureValues[], float floatValues[], int imgSize) {
             encoderInterface.feed(INPUT_NODE, floatValues,
                     1, imgSize, imgSize, 3);
             encoderInterface.run(new String[] {OUTPUT_NODE}, false);
@@ -43,8 +43,8 @@ public class StyleTransfer {
                     1, imgSize, imgSize, 512);
             decoderInterface.feed(INPUT_S_NODE, styleFeatureValues,
                     1, imgSize, imgSize, 512);
-            decoderInterface.run(new String[] {"output/mul"}, false);
-            decoderInterface.fetch("output/mul", stylized_img);
+            decoderInterface.run(new String[] {OUTPUT_NODE}, false);
+            decoderInterface.fetch(OUTPUT_NODE, stylized_img);
         }
     }
 
@@ -121,7 +121,7 @@ public class StyleTransfer {
     }
 
     private void getFeatures(final Bitmap bitmap, float featureValues[]) {
-        encoder.run(featureValues, bitmap.getWidth());
+        encoder.run(featureValues, floatValues, bitmap.getWidth());
     }
 }
 
