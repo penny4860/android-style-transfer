@@ -12,45 +12,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_marginTop="400dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="1dp"
         android:layout_width="match_parent"
-        android:layout_height="112dp"
-        android:background="#3b36ce">
-    </android.support.v7.widget.RecyclerView>
-
-    <!--<FrameLayout-->
-        <!--android:id="@+id/control"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="112dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:background="#3b36ce">-->
-        <!--<ImageView-->
-            <!--android:id="@+id/imageView"-->
-            <!--android:scaleType="fitCenter"-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:src="@drawable/dog"/>-->
-        <!--<ImageView-->
-            <!--android:id="@+id/styleView0"-->
-            <!--android:scaleType="fitCenter"-->
-            <!--android:layout_marginLeft="100dp"-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:src="@drawable/style0"/>-->
-        <!--<ImageView-->
-            <!--android:id="@+id/styleView1"-->
-            <!--android:scaleType="fitCenter"-->
-            <!--android:layout_marginLeft="200dp"-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:src="@drawable/style1"/>-->
-        <!--<ImageView-->
-            <!--android:id="@+id/styleView2"-->
-            <!--android:scaleType="fitCenter"-->
-            <!--android:layout_marginLeft="300dp"-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:src="@drawable/style2"/>-->
-    <!--</FrameLayout>-->
+        android:layout_height="150dp"
+        android:background="#3b36ce" />
 
 </RelativeLayout>
