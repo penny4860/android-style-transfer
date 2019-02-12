@@ -57,14 +57,8 @@ public class StyleTransfer {
         endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "    2. Timecost to decoding: " + Long.toString(endTime - startTime));
 
-        for (int i = 0; i < intValues.length; ++i) {
-            intValues[i] =
-                    0xFF000000
-                            | (((int) (stylized_img[i * 3])) << 16)
-                            | (((int) (stylized_img[i * 3 + 1])) << 8)
-                            | ((int) (stylized_img[i * 3 + 2]));
-        }
-        contentBitmap.setPixels(intValues, 0, contentBitmap.getWidth(), 0, 0, contentBitmap.getWidth(), contentBitmap.getHeight());
+        // 4. Set bitmap
+        setBitmap(contentBitmap, stylized_img);
         Log.d(TAG, "set bitmap");
 
     }
@@ -80,5 +74,15 @@ public class StyleTransfer {
         }
     }
 
+    private void setBitmap(Bitmap contentBitmap, float stylized_img[]) {
+        for (int i = 0; i < intValues.length; ++i) {
+            intValues[i] =
+                    0xFF000000
+                            | (((int) (stylized_img[i * 3])) << 16)
+                            | (((int) (stylized_img[i * 3 + 1])) << 8)
+                            | ((int) (stylized_img[i * 3 + 2]));
+        }
+        contentBitmap.setPixels(intValues, 0, contentBitmap.getWidth(), 0, 0, contentBitmap.getWidth(), contentBitmap.getHeight());
+    }
 }
 
