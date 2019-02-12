@@ -84,11 +84,11 @@ public class StyleTransfer {
         // 1. Get contentFeatureValues
         startTime = SystemClock.uptimeMillis();
         getFloatValues(contentBitmap);
-        getFeatures(contentBitmap, contentFeatureValues);
+        encoder.run(contentFeatureValues, floatValues, 256);
 
         // 2. Get styleFeatureValues
         getFloatValues(styleBitmap);
-        getFeatures(styleBitmap, styleFeatureValues);
+        encoder.run(styleFeatureValues, floatValues, 256);
         endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "    1. Timecost to extract features: " + Long.toString(endTime - startTime));
 
@@ -120,8 +120,5 @@ public class StyleTransfer {
         }
     }
 
-    private void getFeatures(final Bitmap bitmap, float featureValues[]) {
-        encoder.run(featureValues, floatValues, bitmap.getWidth());
-    }
 }
 
