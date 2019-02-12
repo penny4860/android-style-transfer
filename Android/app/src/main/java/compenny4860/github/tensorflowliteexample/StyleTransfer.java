@@ -8,28 +8,28 @@ import java.io.IOException;
 
 public class StyleTransfer {
 
-    private static final int DEFAULT_SIZE = 256;
-
-    private int[] intValues;
-    private float[] floatValues;
     private static final String TAG = "StyleTransferDemo";
+
+    private int mImgSize=256;
+    private int[] intValues = new int[mImgSize * mImgSize];
+    private float[] floatValues = new float[mImgSize * mImgSize * 3];
 
     private Encoder encoder;
     private Decoder decoder;
 
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
-
         encoder = new Encoder(activity);
         decoder = new Decoder(activity);
-        setSize(DEFAULT_SIZE);
         Log.d(TAG, "Tensorflow model initialized");
     }
 
     public void setSize(int desiredSize) {
-        //Todo: desiredSize가 기존 value와 다를 때만 array를 새로 생성
-        floatValues = new float[desiredSize * desiredSize * 3];
-        intValues = new int[desiredSize * desiredSize];
+        if (desiredSize != mImgSize) {
+            mImgSize = desiredSize;
+            intValues = new int[mImgSize * mImgSize];
+            floatValues = new float[mImgSize * mImgSize * 3];
+        }
     }
 
     public void run(final Bitmap contentBitmap, final Bitmap styleBitmap) {
@@ -43,16 +43,17 @@ public class StyleTransfer {
         // 1. Get contentFeatureValues
         startTime = SystemClock.uptimeMillis();
         getFloatValues(contentBitmap);
-        encoder.run(contentFeatureValues, floatValues, 256);
+        encoder.run(contentFeatureValues, floatValues, mImgSize);
 
         // 2. Get styleFeatureValues
         getFloatValues(styleBitmap);
-        encoder.run(styleFeatureValues, floatValues, 256);
+        encoder.run(styleFeatureValues, floatValues, mImgSize);
         endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "    1. Timecost to extract features: " + Long.toString(endTime - startTime));
 
+        // 3. Recon stylized image
         startTime = SystemClock.uptimeMillis();
-        decoder.run(stylized_img, contentFeatureValues, styleFeatureValues, 32);
+        decoder.run(stylized_img, contentFeatureValues, styleFeatureValues, mImgSize/8);
         endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "    2. Timecost to decoding: " + Long.toString(endTime - startTime));
 
