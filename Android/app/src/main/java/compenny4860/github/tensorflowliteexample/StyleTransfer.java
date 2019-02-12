@@ -15,13 +15,8 @@ public class StyleTransfer {
     private static final String MODEL_FILE = "mobile_encoder_opt.pb";
 
     private static final String INPUT_NODE = "input";
-    private static final String STYLE_NODE = "style_num";
     private static final String OUTPUT_NODE = "output/Relu";
-    public static final int NUM_STYLES = 26;
 
-    //    private static final int desiredSize = 256;
-//
-//    private final float[] styleVals = new float[NUM_STYLES];
     private int[] intValues;
     private float[] floatValues;
 
