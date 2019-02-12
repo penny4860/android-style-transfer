@@ -48,8 +48,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
     @Override
     public void onBindViewHolder(ImageListAdapter.ImageViewHolder imageViewHolder, int posIndex) {
         String imgFileName = mFileList.get(posIndex);
+        String styleName = imgFileName.substring(0, imgFileName.lastIndexOf('.'));
 
-        imageViewHolder.imageTextView.setText(imgFileName);
+        imageViewHolder.imageTextView.setText(styleName);
         Bitmap bitmap = null;
         try {
             bitmap = getImage(imgFileName);
