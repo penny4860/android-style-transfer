@@ -9,24 +9,38 @@ import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 public class StyleTransfer {
 
-    private TensorFlowInferenceInterface encoderInterface;
+    public class Encoder {
+        private TensorFlowInferenceInterface encoderInterface;
+        private static final String MODEL_ENCODER_FILE = "mobile_encoder_opt.pb";
+        private static final String INPUT_NODE = "input";
+        private static final String OUTPUT_NODE = "output/Relu";
+
+        Encoder(Activity activity) {
+             encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_ENCODER_FILE);
+        }
+
+        public void run(float featureValues[], int imgSize) {
+            encoderInterface.feed(INPUT_NODE, floatValues,
+                    1, imgSize, imgSize, 3);
+            encoderInterface.run(new String[] {OUTPUT_NODE}, false);
+            encoderInterface.fetch(OUTPUT_NODE, featureValues);
+        }
+    }
+
     private TensorFlowInferenceInterface decoderInterface;
-
-    private static final String MODEL_ENCODER_FILE = "mobile_encoder_opt.pb";
     private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
-
-    private static final String INPUT_NODE = "input";
-    private static final String OUTPUT_NODE = "output/Relu";
     private static final int DEFAULT_SIZE = 256;
 
     private int[] intValues;
     private float[] floatValues;
-
     private static final String TAG = "StyleTransferDemo";
+
+    private Encoder encoder;
 
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
-        encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_ENCODER_FILE);
+
+        encoder = new Encoder(activity);
         decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
         setSize(DEFAULT_SIZE);
         Log.d(TAG, "Tensorflow model initialized");
@@ -91,10 +105,7 @@ public class StyleTransfer {
     }
 
     private void getFeatures(final Bitmap bitmap, float featureValues[]) {
-        encoderInterface.feed(INPUT_NODE, floatValues,
-                1, bitmap.getWidth(), bitmap.getHeight(), 3);
-        encoderInterface.run(new String[] {OUTPUT_NODE}, false);
-        encoderInterface.fetch(OUTPUT_NODE, featureValues);
+        encoder.run(featureValues, bitmap.getWidth());
     }
 }
 
