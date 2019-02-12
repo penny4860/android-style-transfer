@@ -13,6 +13,7 @@ public class StyleTransfer {
     private TensorFlowInferenceInterface decoderInterface;
 
     private static final String MODEL_FILE = "mobile_encoder_opt.pb";
+    private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
 
     private static final String INPUT_NODE = "input";
     private static final String OUTPUT_NODE = "output/Relu";
@@ -25,7 +26,7 @@ public class StyleTransfer {
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
         encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_FILE);
-        decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), "decoder_opt.pb");
+        decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
         setSize(256);
         Log.d(TAG, "Tensorflow model initialized");
     }
