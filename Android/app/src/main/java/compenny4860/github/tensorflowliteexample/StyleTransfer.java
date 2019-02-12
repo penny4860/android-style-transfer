@@ -12,11 +12,12 @@ public class StyleTransfer {
     private TensorFlowInferenceInterface encoderInterface;
     private TensorFlowInferenceInterface decoderInterface;
 
-    private static final String MODEL_FILE = "mobile_encoder_opt.pb";
+    private static final String MODEL_ENCODER_FILE = "mobile_encoder_opt.pb";
     private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
 
     private static final String INPUT_NODE = "input";
     private static final String OUTPUT_NODE = "output/Relu";
+    private static final int DEFAULT_SIZE = 256;
 
     private int[] intValues;
     private float[] floatValues;
@@ -25,9 +26,9 @@ public class StyleTransfer {
 
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
-        encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_FILE);
+        encoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_ENCODER_FILE);
         decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
-        setSize(256);
+        setSize(DEFAULT_SIZE);
         Log.d(TAG, "Tensorflow model initialized");
     }
 
@@ -35,24 +36,6 @@ public class StyleTransfer {
         //Todo: desiredSize가 기존 value와 다를 때만 array를 새로 생성
         floatValues = new float[desiredSize * desiredSize * 3];
         intValues = new int[desiredSize * desiredSize];
-    }
-
-    private void getFloatValues(final Bitmap bitmap) {
-        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        for (int i = 0; i < intValues.length; ++i) {
-            final int val = intValues[i];
-            floatValues[i * 3] = ((val >> 16) & 0xFF) / 1.0f;
-            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 1.0f;
-            floatValues[i * 3 + 2] = (val & 0xFF) / 1.0f;
-        }
-    }
-
-    private void getFeatures(final Bitmap bitmap, float featureValues[]) {
-        encoderInterface.feed(INPUT_NODE, floatValues,
-                1, bitmap.getWidth(), bitmap.getHeight(), 3);
-        encoderInterface.run(new String[] {OUTPUT_NODE}, false);
-        encoderInterface.fetch(OUTPUT_NODE, featureValues);
     }
 
     public void run(final Bitmap contentBitmap, final Bitmap styleBitmap) {
@@ -96,5 +79,22 @@ public class StyleTransfer {
 
     }
 
+    private void getFloatValues(final Bitmap bitmap) {
+        bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        for (int i = 0; i < intValues.length; ++i) {
+            final int val = intValues[i];
+            floatValues[i * 3] = ((val >> 16) & 0xFF) / 1.0f;
+            floatValues[i * 3 + 1] = ((val >> 8) & 0xFF) / 1.0f;
+            floatValues[i * 3 + 2] = (val & 0xFF) / 1.0f;
+        }
+    }
+
+    private void getFeatures(final Bitmap bitmap, float featureValues[]) {
+        encoderInterface.feed(INPUT_NODE, floatValues,
+                1, bitmap.getWidth(), bitmap.getHeight(), 3);
+        encoderInterface.run(new String[] {OUTPUT_NODE}, false);
+        encoderInterface.fetch(OUTPUT_NODE, featureValues);
+    }
 }
 
