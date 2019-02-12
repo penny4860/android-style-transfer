@@ -16,6 +16,6 @@
         android:layout_marginBottom="1dp"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#3b36ce" />
+        android:background="#ebebf2" />
 
 </RelativeLayout>
