@@ -26,9 +26,29 @@ public class StyleTransfer {
             encoderInterface.fetch(OUTPUT_NODE, featureValues);
         }
     }
+    public class Decoder {
+        private TensorFlowInferenceInterface decoderInterface;
+        private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
 
-    private TensorFlowInferenceInterface decoderInterface;
-    private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
+        private static final String INPUT_C_NODE = "input_c";
+        private static final String INPUT_S_NODE = "input_s";
+        private static final String OUTPUT_NODE = "output/mul";
+
+        Decoder(Activity activity) {
+            decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
+        }
+
+        public void run(float stylized_img[], float contentFeatureValues[], float styleFeatureValues[], int imgSize) {
+            decoderInterface.feed(INPUT_C_NODE, contentFeatureValues,
+                    1, imgSize, imgSize, 512);
+            decoderInterface.feed(INPUT_S_NODE, styleFeatureValues,
+                    1, imgSize, imgSize, 512);
+            decoderInterface.run(new String[] {"output/mul"}, false);
+            decoderInterface.fetch("output/mul", stylized_img);
+        }
+    }
+
+
     private static final int DEFAULT_SIZE = 256;
 
     private int[] intValues;
@@ -36,12 +56,13 @@ public class StyleTransfer {
     private static final String TAG = "StyleTransferDemo";
 
     private Encoder encoder;
+    private Decoder decoder;
 
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
 
         encoder = new Encoder(activity);
-        decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
+        decoder = new Decoder(activity);
         setSize(DEFAULT_SIZE);
         Log.d(TAG, "Tensorflow model initialized");
     }
@@ -72,12 +93,7 @@ public class StyleTransfer {
         Log.d(TAG, "    1. Timecost to extract features: " + Long.toString(endTime - startTime));
 
         startTime = SystemClock.uptimeMillis();
-        decoderInterface.feed("input_c", contentFeatureValues,
-                1, contentBitmap.getWidth()/8, contentBitmap.getHeight()/8, 512);
-        decoderInterface.feed("input_s", styleFeatureValues,
-                1, styleBitmap.getWidth()/8, styleBitmap.getHeight()/8, 512);
-        decoderInterface.run(new String[] {"output/mul"}, false);
-        decoderInterface.fetch("output/mul", stylized_img);
+        decoder.run(stylized_img, contentFeatureValues, styleFeatureValues, 32);
         endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "    2. Timecost to decoding: " + Long.toString(endTime - startTime));
 
