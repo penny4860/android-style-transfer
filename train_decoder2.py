@@ -63,7 +63,7 @@ if __name__ == '__main__':
                                                       include_post_process=False,
                                                       use_bn=True)
     
-    c_fnames = glob.glob(args.image_root + "/*.jpg")[:20]
+    c_fnames = glob.glob("input/content/*.*")
     s_fnames = glob.glob("input/style/*.*")
     print(len(c_fnames), len(s_fnames))
     
