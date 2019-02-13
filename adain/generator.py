@@ -115,4 +115,50 @@ class DecodeBatchGenerator(Sequence):
         np.random.shuffle(self.fnames)
 
 
+class CombineBatchGenerator(Sequence):
+    def __init__(self, c_fnames, s_fnames, batch_size, shuffle, encoder_model, combine_decoder_model, input_size=256):
+        self.c_fnames = c_fnames
+        self.s_fnames = s_fnames
+        
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+        self.input_size = input_size
+        
+        self.vgg_encoder = encoder_model
+        self.vgg_encoder.predict(np.zeros((1,input_size,input_size,3)))
+        self.vgg_combine_decoder = combine_decoder_model
+        self.vgg_combine_decoder.predict([np.zeros((1,int(input_size/8),int(input_size/8),512)),
+                                          np.zeros((1,int(input_size/8),int(input_size/8),512))])
+        
+        self.on_epoch_end()
+
+    def __len__(self):
+        n_files = min(len(self.c_fnames), len(self.s_fnames))
+        return int(n_files / self.batch_size)
+
+    def __getitem__(self, idx):
+        """
+        # Args
+            idx : batch index
+        """
+        batch_c_fnames = self.c_fnames[idx*self.batch_size: (idx+1)*self.batch_size]
+        batch_s_fnames = self.s_fnames[idx*self.batch_size: (idx+1)*self.batch_size]
+        
+        c_imgs = [cv2.imread(fname)[:,:,::-1] for fname in batch_c_fnames]
+        c_imgs = np.array([cv2.resize(img, (self.input_size,self.input_size)) for img in c_imgs])
+
+        s_imgs = [cv2.imread(fname)[:,:,::-1] for fname in batch_s_fnames]
+        s_imgs = np.array([cv2.resize(img, (self.input_size,self.input_size)) for img in s_imgs])
+        
+        c_features = self.vgg_encoder.predict(c_imgs)
+        s_features = self.vgg_encoder.predict(s_imgs)
+        
+        xs = [c_features, s_features]
+        ys = self.vgg_combine_decoder.predict(xs)
+        return xs, ys
+
+    def on_epoch_end(self):
+        np.random.shuffle(self.c_fnames)
+        np.random.shuffle(self.s_fnames)
+
 
