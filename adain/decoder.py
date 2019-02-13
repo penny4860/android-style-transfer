@@ -67,7 +67,7 @@ def build_vgg_decoder(input_features):
     return x
 
 
-def build_mobile_decoder(input_features):
+def build_mobile_decoder(input_features, use_batch_norm):
     
     # (32,32,512)
     x = input_features
@@ -75,66 +75,82 @@ def build_mobile_decoder(input_features):
     # Block 4
     # (32,32,512)
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(256, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = UpSampling2D()(x)
     # (64,64,256)
 
     # Block 3
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(256, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
 
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(256, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
 
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(256, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
 
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(128, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = UpSampling2D()(x)
 
     # Block 2
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(128, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
 
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(64, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = UpSampling2D()(x)
 
     # Block 1
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     x = Conv2D(64, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    if use_batch_norm:
+        x = BatchNormalization()(x)
     x = Activateion("relu")(x)
 
     x = Conv2D(3, (3, 3), activation='relu', padding='same', name='block1_conv2_decode')(x)
@@ -142,7 +158,7 @@ def build_mobile_decoder(input_features):
     return x
 
 
-def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg"):
+def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg", use_batch_norm=True):
     c_feat_input = Input(shape=input_shape, name="input_c")
     s_feat_input = Input(shape=input_shape, name="input_s")
     
@@ -150,7 +166,7 @@ def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg"
     if model == "vgg":
         x = build_vgg_decoder(x)
     elif model == "mobile":
-        x = build_mobile_decoder(x)
+        x = build_mobile_decoder(x, use_batch_norm)
 
     model = Model([c_feat_input, s_feat_input], x, name='decoder')
     return model
