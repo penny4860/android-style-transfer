@@ -58,7 +58,7 @@ if __name__ == '__main__':
     model = combine_and_decode_model(input_shape=[decoder_input_size,decoder_input_size,512],
                                      model="mobile",
                                      include_post_process=False,
-                                     use_bn=True)
+                                     use_bn=False)
     if args.weights_init:
         model.load_weights(args.weights_init, by_name=True)
     
