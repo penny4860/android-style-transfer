@@ -58,8 +58,6 @@ if __name__ == '__main__':
                                                    model="vgg",
                                                    include_post_process=False)
     vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
-    vgg_combine_decoder.summary()
-
     mobile_combine_decoder = combine_and_decode_model(input_shape=[decoder_input_size,decoder_input_size,512],
                                                       model="mobile",
                                                       include_post_process=False,
