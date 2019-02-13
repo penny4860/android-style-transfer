@@ -15,7 +15,7 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 
 
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
-DEFAULT_BATCH_SIZE = 8
+DEFAULT_BATCH_SIZE = 4
 DEFAULT_LEARNING_RATE = 0.01
 DEFAULT_INIT_WEIGHTS = None
 DEFAULT_VGG_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
@@ -46,7 +46,7 @@ argparser.add_argument('-l',
 if __name__ == '__main__':
     args = argparser.parse_args()
     
-    input_size = 256
+    input_size = 512
     decoder_input_size = int(input_size/8)
 #     model = mobile_decoder(input_shape=[int(input_size/8),int(input_size/8),512])
 #     if args.weights_init:
@@ -75,7 +75,8 @@ if __name__ == '__main__':
                                             batch_size=min(args.batch_size, len(s_fnames), len(s_fnames)),
                                             shuffle=True,
                                             encoder_model=vgg_encoder_model,
-                                            combine_decoder_model=vgg_combine_decoder)
+                                            combine_decoder_model=vgg_combine_decoder,
+                                            input_size=input_size)
     xs, ys = train_generator[0]
     print(xs[0].shape, xs[1].shape, ys.shape)
 
