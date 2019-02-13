@@ -68,7 +68,7 @@ def build_vgg_decoder(input_features, include_post_process):
     return x
 
 
-def build_mobile_decoder(input_features, include_post_process):
+def build_mobile_decoder_bn(input_features, include_post_process):
     
     # (32,32,512)
     x = input_features
@@ -144,7 +144,67 @@ def build_mobile_decoder(input_features, include_post_process):
     return x
 
 
-def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg", include_post_process=True):
+def build_mobile_decoder(input_features, include_post_process):
+    
+    # (32,32,512)
+    x = input_features
+    
+    # Block 4
+    # (32,32,512)
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(256, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = UpSampling2D()(x)
+    # (64,64,256)
+
+    # Block 3
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(256, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(256, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(256, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(128, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = UpSampling2D()(x)
+
+    # Block 2
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(128, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(64, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = UpSampling2D()(x)
+
+    # Block 1
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(64, (1, 1), use_bias=True, padding='same')(x)
+    x = Activateion("relu")(x)
+
+    x = Conv2D(3, (3, 3), activation='relu', padding='same', name='block1_conv2_decode')(x)
+    if include_post_process:
+        x = PostPreprocess(name="output")(x)
+    return x
+
+
+def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg", include_post_process=True, use_bn=True):
     c_feat_input = Input(shape=input_shape, name="input_c")
     s_feat_input = Input(shape=input_shape, name="input_s")
     
@@ -152,7 +212,10 @@ def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg"
     if model == "vgg":
         x = build_vgg_decoder(x, include_post_process)
     elif model == "mobile":
-        x = build_mobile_decoder(x, include_post_process)
+        if use_bn:
+            x = build_mobile_decoder_bn(x, include_post_process)
+        else:
+            x = build_mobile_decoder(x, include_post_process)
 
     model = Model([c_feat_input, s_feat_input], x, name='decoder')
     return model
@@ -174,6 +237,9 @@ def mobile_decoder(input_shape=[None,None,512]):
 if __name__ == '__main__':
     # Total params: 3,505,219
     # Total params:   408,003
-    model = combine_and_decode_model(input_shape=[32,32,512], model="mobile")
+    model = combine_and_decode_model(input_shape=[32,32,512], model="mobile", use_bn=True)
+    model.summary()
+
+    model = combine_and_decode_model(input_shape=[32,32,512], model="mobile", use_bn=False)
     model.summary()
 
