@@ -48,9 +48,6 @@ if __name__ == '__main__':
     
     input_size = 512
     decoder_input_size = int(input_size/8)
-#     model = mobile_decoder(input_shape=[int(input_size/8),int(input_size/8),512])
-#     if args.weights_init:
-#         model.load_weights(args.weights_init, by_name=True)
 
     vgg_encoder_model = vgg_encoder(input_shape=[input_size,input_size,3])
     vgg_encoder_model.load_weights(DEFAULT_VGG_ENCODER_H5)
@@ -58,10 +55,12 @@ if __name__ == '__main__':
                                                    model="vgg",
                                                    include_post_process=False)
     vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
-    mobile_combine_decoder = combine_and_decode_model(input_shape=[decoder_input_size,decoder_input_size,512],
-                                                      model="mobile",
-                                                      include_post_process=False,
-                                                      use_bn=True)
+    model = combine_and_decode_model(input_shape=[decoder_input_size,decoder_input_size,512],
+                                     model="mobile",
+                                     include_post_process=False,
+                                     use_bn=True)
+    if args.weights_init:
+        model.load_weights(args.weights_init, by_name=True)
     
     c_fnames = glob.glob("input/content/*.*")
     s_fnames = glob.glob("input/style/*.*")
@@ -75,22 +74,22 @@ if __name__ == '__main__':
                                             encoder_model=vgg_encoder_model,
                                             combine_decoder_model=vgg_combine_decoder,
                                             input_size=input_size)
-    import matplotlib.pyplot as plt
-    for j in range(5):
-        xs, ys = train_generator[j]
-        for i in range(4):
-            plt.imshow(ys[i].astype(np.uint8))
-            plt.show()
+#     import matplotlib.pyplot as plt
+#     for j in range(5):
+#         xs, ys = train_generator[j]
+#         for i in range(4):
+#             plt.imshow(ys[i].astype(np.uint8))
+#             plt.show()
     
 #     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
-#     
-#     # 2. create loss function
-#     model.compile(loss="mean_squared_error",
-#                   optimizer=keras.optimizers.Adam(lr=args.learning_rate))
-#     model.fit_generator(train_generator,
-#                         steps_per_epoch=len(train_generator),
-#                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
-#                         validation_data  = train_generator,
-#                         validation_steps = len(train_generator),
-#                         epochs=1000)
+     
+    # 2. create loss function
+    model.compile(loss="mean_squared_error",
+                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
+    model.fit_generator(train_generator,
+                        steps_per_epoch=len(train_generator),
+                        callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
+                        validation_data  = train_generator,
+                        validation_steps = len(train_generator),
+                        epochs=1000)
 
