@@ -10,7 +10,7 @@ import argparse
 np.random.seed(1337)
 from adain import MODEL_ROOT
 from adain.encoder import vgg_encoder
-from adain.decoder import vgg_decoder, mobile_decoder, combine_and_decode_model
+from adain.decoder import combine_and_decode_model
 from adain.generator import CombineBatchGenerator, create_callbacks
 
 
