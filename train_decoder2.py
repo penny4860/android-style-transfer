@@ -93,8 +93,8 @@ def build_model(vgg_combine_decoder):
 def loss_func(y_true, y_pred):
     # 1. activate prediction & truth tensor
     style_loss = tf.losses.mean_squared_error(y_true, y_pred)
-    tv_loss = tf.reduce_sum(tf.image.total_variation(y_pred))
-    loss = style_loss + 0.01*tv_loss
+    tv_loss = tf.reduce_mean(tf.image.total_variation(y_pred))
+    loss = style_loss + 1e-8*tv_loss
     return loss
 
 
@@ -111,9 +111,7 @@ if __name__ == '__main__':
                                                    include_post_process=False)
     vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
     model = build_model(vgg_combine_decoder)
-    # model.save_weights("mobile_decoder.h5")
-    # print(len(model.layers))
-
+    model.load_weights("mobile_decoder.h5")
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
