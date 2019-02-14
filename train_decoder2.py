@@ -44,7 +44,6 @@ argparser.add_argument('-l',
 
 
 from adain.layers import SpatialReflectionPadding
-from adain import USE_TF_KERAS
 if USE_TF_KERAS:
     Input = tf.keras.layers.Input
     Conv2D = tf.keras.layers.Conv2D
