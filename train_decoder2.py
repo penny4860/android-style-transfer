@@ -101,13 +101,14 @@ if __name__ == '__main__':
                                                    include_post_process=False)
     vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
     model = build_model(vgg_combine_decoder)
-    model.summary()
+    # model.save_weights("mobile_decoder.h5")
+    # print(len(model.layers))
 
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
     print(len(c_fnames), len(s_fnames))
-     
+      
     # c_fnames, s_fnames, batch_size, shuffle, encoder_model, combine_decoder_model
     train_generator = CombineBatchGenerator(c_fnames,
                                             s_fnames,
@@ -122,9 +123,9 @@ if __name__ == '__main__':
 #         for i in range(4):
 #             plt.imshow(ys[i].astype(np.uint8))
 #             plt.show()
-     
-#     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
       
+#     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
+       
     # 2. create loss function
     if USE_TF_KERAS:
         opt = tf.keras.optimizers.Adam(lr=args.learning_rate)
