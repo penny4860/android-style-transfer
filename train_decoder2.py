@@ -1,14 +1,14 @@
 
 # import modules
 import numpy as np
-# import tensorflow as tf
 import os
 import glob
+import tensorflow as tf
 import keras
 import argparse
 
 np.random.seed(1337)
-from adain import MODEL_ROOT
+from adain import MODEL_ROOT, USE_TF_KERAS
 from adain.encoder import vgg_encoder
 from adain.decoder import combine_and_decode_model
 from adain.generator import CombineBatchGenerator, create_callbacks
@@ -46,7 +46,7 @@ argparser.add_argument('-l',
 if __name__ == '__main__':
     args = argparser.parse_args()
     
-    input_size = 512
+    input_size = 256
     decoder_input_size = int(input_size/8)
 
     vgg_encoder_model = vgg_encoder(input_shape=[input_size,input_size,3])
@@ -84,8 +84,12 @@ if __name__ == '__main__':
 #     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
      
     # 2. create loss function
+    if USE_TF_KERAS:
+        opt = tf.keras.optimizers.Adam(lr=args.learning_rate)
+    else:
+        opt = keras.optimizers.Adam(lr=args.learning_rate)
     model.compile(loss="mean_squared_error",
-                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
+                  optimizer=opt)
     model.fit_generator(train_generator,
                         steps_per_epoch=len(train_generator),
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
