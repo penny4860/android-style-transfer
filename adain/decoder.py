@@ -62,7 +62,7 @@ def build_vgg_decoder(input_features, include_post_process):
     x = SpatialReflectionPadding()(x)
     x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1_decode')(x)
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(3, (3, 3), activation=None, padding='valid', name='block1_conv2_decode')(x)
+    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='block1_conv2_decode')(x)
     if include_post_process:
         x = PostPreprocess(name="output")(x)
     return x
