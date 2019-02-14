@@ -70,9 +70,11 @@ else:
 def build_model(vgg_combine_decoder):
     x = vgg_combine_decoder.get_layer("spatial_reflection_padding_17").output
 
-    x = DepthwiseConv2D((3, 3), use_bias=True, padding='valid')(x)
+    x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid')(x)
+    x = BatchNormalization()(x)
     x = Activateion("relu")(x)
-    x = Conv2D(64, (1, 1), use_bias=True, padding='valid')(x)
+    x = Conv2D(64, (1, 1), use_bias=False, padding='valid')(x)
+    x = BatchNormalization()(x)
     x = Activateion("relu")(x)
     
     x = SpatialReflectionPadding()(x)
