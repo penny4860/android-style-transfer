@@ -44,6 +44,10 @@ if __name__ == '__main__':
 
     stylized_imgs = mobile_decoder.predict([c_features, s_features])
     stylized_img = stylized_imgs[0]
-   
+    stylized_img[stylized_img > 1] = 1
+    stylized_img[stylized_img < 0] = 0
+    stylized_img *= 255
+    stylized_img = stylized_img.astype(np.uint8)
+
     # 5. plot
     plot([c_img, s_img, stylized_img])

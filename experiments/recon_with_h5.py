@@ -7,8 +7,8 @@ import os
 from adain.utils import preprocess, plot
 from adain import MODEL_ROOT, PROJECT_ROOT
 
-DEFAULT_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "mobile_encoder.h5")
-DEFAULT_DECODER_H5 = os.path.join(PROJECT_ROOT, "mobile_decoder.h5")
+DEFAULT_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
+DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
 content_fname="../input/content/chicago.jpg"
 style_fname="../input/style/asheville.jpg"
@@ -26,10 +26,10 @@ if __name__ == '__main__':
     s_img_prep = preprocess(s_img, (256,256))
     
     # 3. encoding
-    from adain.encoder import mobile_encoder
+    from adain.encoder import vgg_encoder
     from adain.decoder import combine_and_decode_model
-    encoder = mobile_encoder()
-    decoder = combine_and_decode_model(model="mobile")
+    encoder = vgg_encoder(input_shape=[256,256,3])
+    decoder = combine_and_decode_model(model="vgg", input_shape=[32,32,512])
     encoder.load_weights(DEFAULT_ENCODER_H5)
     decoder.load_weights(DEFAULT_DECODER_H5)
 
