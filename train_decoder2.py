@@ -124,14 +124,6 @@ if __name__ == '__main__':
                                             encoder_model=vgg_encoder_model,
                                             combine_decoder_model=vgg_combine_decoder,
                                             input_size=input_size)
-#     import matplotlib.pyplot as plt
-#     for j in range(5):
-#         xs, ys = train_generator[j]
-#         for i in range(4):
-#             plt.imshow(ys[i].astype(np.uint8))
-#             plt.show()
-      
-#     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
        
     # 2. create loss function
     if USE_TF_KERAS:
