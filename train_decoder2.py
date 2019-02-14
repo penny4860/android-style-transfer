@@ -43,6 +43,50 @@ argparser.add_argument('-l',
                        help='learning rate')
 
 
+from adain.layers import SpatialReflectionPadding
+from adain import USE_TF_KERAS
+if USE_TF_KERAS:
+    Input = tf.keras.layers.Input
+    Conv2D = tf.keras.layers.Conv2D
+    Model = tf.keras.models.Model
+    UpSampling2D = tf.keras.layers.UpSampling2D
+    Layer = tf.keras.layers.Layer
+    SeparableConv2D = tf.keras.layers.SeparableConv2D
+    DepthwiseConv2D = tf.keras.layers.DepthwiseConv2D
+    BatchNormalization = tf.keras.layers.BatchNormalization
+    Activateion = tf.keras.layers.Activation
+else:
+    Input = keras.layers.Input
+    Conv2D = keras.layers.Conv2D
+    Model = keras.models.Model
+    UpSampling2D = keras.layers.UpSampling2D
+    Layer = keras.layers.Layer
+    SeparableConv2D = keras.layers.SeparableConv2D
+    DepthwiseConv2D = keras.layers.DepthwiseConv2D
+    BatchNormalization = keras.layers.BatchNormalization
+    Activateion = keras.layers.Activation
+
+
+def build_model(vgg_combine_decoder):
+    x = vgg_combine_decoder.get_layer("spatial_reflection_padding_17").output
+
+    x = DepthwiseConv2D((3, 3), use_bias=True, padding='valid')(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(64, (1, 1), use_bias=True, padding='valid')(x)
+    x = Activateion("relu")(x)
+    
+    x = SpatialReflectionPadding()(x)
+    x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1_decode')(x)
+    model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    
+    for layer in model.layers:
+        if layer.name == "spatial_reflection_padding_17":
+            break
+        layer.trainable = False
+        print(layer.name)
+    return model
+
+
 if __name__ == '__main__':
     args = argparser.parse_args()
     
@@ -55,17 +99,16 @@ if __name__ == '__main__':
                                                    model="vgg",
                                                    include_post_process=False)
     vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
-    model = combine_and_decode_model(input_shape=[decoder_input_size,decoder_input_size,512],
-                                     model="mobile",
-                                     include_post_process=False,
-                                     use_bn=False)
+    model = build_model(vgg_combine_decoder)
+    model.summary()
+    
     if args.weights_init:
         model.load_weights(args.weights_init, by_name=True)
-    
+     
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
     print(len(c_fnames), len(s_fnames))
-    
+     
     # c_fnames, s_fnames, batch_size, shuffle, encoder_model, combine_decoder_model
     train_generator = CombineBatchGenerator(c_fnames,
                                             s_fnames,
@@ -80,9 +123,9 @@ if __name__ == '__main__':
 #         for i in range(4):
 #             plt.imshow(ys[i].astype(np.uint8))
 #             plt.show()
-    
-#     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
      
+#     # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
+      
     # 2. create loss function
     if USE_TF_KERAS:
         opt = tf.keras.optimizers.Adam(lr=args.learning_rate)
