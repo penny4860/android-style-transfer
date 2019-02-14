@@ -17,7 +17,7 @@ alpha = 1.0
 
 if __name__ == '__main__':
     
-    encoder_input = 256
+    encoder_input = 512
     decoder_input = int(encoder_input/8)
     
     # 1. contents / style images
