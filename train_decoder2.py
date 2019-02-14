@@ -76,8 +76,9 @@ def build_model(vgg_combine_decoder):
     x = Activateion("relu")(x)
     
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1_decode')(x)
+    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='block1_conv2_decode')(x)
     model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    model.load_weights(DEFAULT_VGG_DECODER_H5, by_name=True)
     
     for layer in model.layers:
         if layer.name == "spatial_reflection_padding_17":
@@ -101,9 +102,7 @@ if __name__ == '__main__':
     vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
     model = build_model(vgg_combine_decoder)
     model.summary()
-    
-    if args.weights_init:
-        model.load_weights(args.weights_init, by_name=True)
+
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
