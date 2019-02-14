@@ -90,6 +90,14 @@ def build_model(vgg_combine_decoder):
     return model
 
 
+def loss_func(y_true, y_pred):
+    # 1. activate prediction & truth tensor
+    style_loss = tf.losses.mean_squared_error(y_true, y_pred)
+    tv_loss = tf.reduce_sum(tf.image.total_variation(y_pred))
+    loss = style_loss + 0.01*tv_loss
+    return loss
+
+
 if __name__ == '__main__':
     args = argparser.parse_args()
     
@@ -133,7 +141,7 @@ if __name__ == '__main__':
         opt = tf.keras.optimizers.Adam(lr=args.learning_rate)
     else:
         opt = keras.optimizers.Adam(lr=args.learning_rate)
-    model.compile(loss="mean_squared_error",
+    model.compile(loss=loss_func,
                   optimizer=opt)
     model.fit_generator(train_generator,
                         steps_per_epoch=len(train_generator),
