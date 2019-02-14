@@ -27,17 +27,17 @@ def create_callbacks(saved_weights_name="mobile_encoder.h5"):
                                                     mode='min', 
                                                     period=1)
     
-    tensorboard_callback = TensorBoard(
-            histogram_freq         = 0,
-            write_graph            = True,
-            write_grads            = False,
-            write_images           = False,
-            embeddings_freq        = 0,
-            embeddings_layer_names = None,
-            embeddings_metadata    = None
-        )
+#     tensorboard_callback = TensorBoard(
+#             histogram_freq         = 0,
+#             write_graph            = True,
+#             write_grads            = False,
+#             write_images           = False,
+#             embeddings_freq        = 0,
+#             embeddings_layer_names = None,
+#             embeddings_metadata    = None
+#         )
     callbacks = [checkpoint]
-    callbacks.append(tensorboard_callback)
+    # callbacks.append(tensorboard_callback)
     callbacks.append(ReduceLROnPlateau(
         monitor    = 'loss',
         factor     = 0.1,
