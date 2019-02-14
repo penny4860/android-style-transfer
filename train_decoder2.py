@@ -69,15 +69,15 @@ else:
 def build_model(vgg_combine_decoder):
     x = vgg_combine_decoder.get_layer("spatial_reflection_padding_17").output
 
-    x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid')(x)
-    x = BatchNormalization()(x)
+    x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid', name='b1_layer3_depthconv3x3')(x)
+    x = BatchNormalization(name='b1_layer3_bn')(x)
     x = Activateion("relu")(x)
-    x = Conv2D(64, (1, 1), use_bias=False, padding='valid')(x)
-    x = BatchNormalization()(x)
+    x = Conv2D(64, (1, 1), use_bias=False, padding='valid', name='b1_layer2_conv1x1')(x)
+    x = BatchNormalization(name='b1_layer2_bn')(x)
     x = Activateion("relu")(x)
     
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='block1_conv2_decode')(x)
+    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
     model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
     
     for layer in model.layers:
