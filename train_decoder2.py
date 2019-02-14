@@ -16,7 +16,7 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
 DEFAULT_BATCH_SIZE = 4
-DEFAULT_LEARNING_RATE = 0.01
+DEFAULT_LEARNING_RATE = 0.001
 DEFAULT_INIT_WEIGHTS = None
 DEFAULT_VGG_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
 DEFAULT_VGG_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
