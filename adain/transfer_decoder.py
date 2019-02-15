@@ -120,9 +120,13 @@ if __name__ == '__main__':
     input_size = 256
     feature_size = int(input_size/8)  
 
-    mobile_combine_decoder = build_mobile_combine_decoder(feature_size, 4)
+    mobile_combine_decoder = build_mobile_combine_decoder(feature_size, 1)
     mobile_combine_decoder.summary()
 
+# 4.
+# Total params: 420,611
+# Trainable params: 414,083
+# Non-trainable params: 6,528
 
 # 3. 
 # Total params: 1,461,763
@@ -133,3 +137,8 @@ if __name__ == '__main__':
 # Total params: 3,280,771
 # Trainable params: 34,435
 # Non-trainable params: 3,246,336
+
+# 1.
+# Total params: 3,473,475
+# Trainable params: 6,659
+# Non-trainable params: 3,466,816
