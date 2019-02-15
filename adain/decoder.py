@@ -2,10 +2,12 @@
 
 import tensorflow as tf
 import keras
+import os
 
-from adain import USE_TF_KERAS
+from adain import USE_TF_KERAS, MODEL_ROOT
 from adain.layers import PostPreprocess, SpatialReflectionPadding, AdaIN
 
+VGG_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
 if USE_TF_KERAS:
     Input = tf.keras.layers.Input
@@ -68,17 +70,20 @@ def build_vgg_decoder(input_features, include_post_process):
     return x
 
 
-def combine_and_decode_model(input_shape=[None,None,512], alpha=1.0, model="vgg", include_post_process=True):
+def combine_and_decode_model(feature_size=32,
+                             alpha=1.0,
+                             include_post_process=True,
+                             h5_fname=VGG_DECODER_H5):
+    
+    input_shape=[feature_size,feature_size,512]
     c_feat_input = Input(shape=input_shape, name="input_c")
     s_feat_input = Input(shape=input_shape, name="input_s")
     
     x = AdaIN(alpha)([c_feat_input, s_feat_input])
-    if model == "vgg":
-        x = build_vgg_decoder(x, include_post_process)
-    elif model == "mobile":
-        pass
+    x = build_vgg_decoder(x, include_post_process)
 
     model = Model([c_feat_input, s_feat_input], x, name='decoder')
+    model.load_weights(h5_fname)
     return model
 
 
@@ -92,9 +97,6 @@ def vgg_decoder(input_shape=[None,None,512]):
 if __name__ == '__main__':
     # Total params: 3,505,219
     # Total params:   408,003
-    model = combine_and_decode_model(input_shape=[32,32,512], model="mobile", use_bn=True)
-    model.summary()
-
-    model = combine_and_decode_model(input_shape=[32,32,512], model="mobile", use_bn=False)
+    model = combine_and_decode_model(feature_size=32)
     model.summary()
 
