@@ -105,14 +105,15 @@ def build_mobile_combine_decoder(feature_size=32, num_new_blocks=1):
         x = build_mobile_b2(x)
         x = build_mobile_b1(x)
         model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
-    
+
+    print("=================================================================")
     for layer in model.layers:
         if layer.name == vgg_output_layer_name:
             break
         layer.trainable = False
         print(layer.name)
+    print("==============FROZEN LAYERS =====================================")
     return model
-
 
 
 if __name__ == '__main__':
