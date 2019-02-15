@@ -16,28 +16,36 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
 DEFAULT_BATCH_SIZE = 4
+
 DEFAULT_LEARNING_RATE = 0.001
-DEFAULT_INIT_WEIGHTS = None
+DEFAULT_INPUT_SIZE = 256
+DEFAULT_NEW_BLOCK = 2
+
 
 argparser = argparse.ArgumentParser(description='Train mobile decoder')
-argparser.add_argument('-i',
-                       '--image_root',
-                       default=DEFAULT_IMG_ROOT,
-                       help='images directory')
-argparser.add_argument('-w',
-                       '--weights_init',
-                       default=DEFAULT_INIT_WEIGHTS,
-                       help='learning rate')
-argparser.add_argument('-b',
-                       '--batch_size',
-                       default=DEFAULT_BATCH_SIZE,
-                       type=int,
-                       help='batch size')
 argparser.add_argument('-l',
                        '--learning_rate',
                        default=DEFAULT_LEARNING_RATE,
                        type=float,
                        help='learning rate')
+argparser.add_argument('-s',
+                       '--size',
+                       default=DEFAULT_INPUT_SIZE,
+                       help='images directory')
+argparser.add_argument('-n',
+                       '--new_block',
+                       default=DEFAULT_NEW_BLOCK,
+                       help='images directory')
+
+argparser.add_argument('-i',
+                       '--image_root',
+                       default=DEFAULT_IMG_ROOT,
+                       help='images directory')
+argparser.add_argument('-b',
+                       '--batch_size',
+                       default=DEFAULT_BATCH_SIZE,
+                       type=int,
+                       help='batch size')
 
 
 if USE_TF_KERAS:
@@ -86,10 +94,7 @@ def create_models(input_size, num_new_blocks):
 from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
-    
-    input_size = 256
-    num_new_blocks = 2
-    vgg_encoder_model, vgg_combine_decoder, model = create_models(input_size, num_new_blocks)
+    vgg_encoder_model, vgg_combine_decoder, model = create_models(args.size, args.new_block)
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
@@ -102,7 +107,7 @@ if __name__ == '__main__':
                                             shuffle=True,
                                             encoder_model=vgg_encoder_model,
                                             combine_decoder_model=vgg_combine_decoder,
-                                            input_size=input_size)
+                                            input_size=args.size)
         
     # 2. create loss function
     model.compile(loss=loss_func,
