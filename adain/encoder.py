@@ -2,9 +2,14 @@
 
 import tensorflow as tf
 import keras
+import os
 
 from adain import USE_TF_KERAS
 from adain.layers import VggPreprocess, SpatialReflectionPadding
+from adain import MODEL_ROOT
+
+VGG_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
+
 
 if USE_TF_KERAS:
     Input = tf.keras.layers.Input
@@ -26,7 +31,8 @@ else:
     Model = keras.models.Model
 
 
-def vgg_encoder(input_shape=[None,None,3]):
+def vgg_encoder(input_shape=[None,None,3],
+                h5_fname=VGG_ENCODER_H5):
     
     def _build_model(input_shape):
         x = Input(shape=input_shape, name="input")
@@ -64,6 +70,7 @@ def vgg_encoder(input_shape=[None,None,3]):
         model = Model(img_input, x, name='vgg19')
         return model
     model = _build_model(input_shape)
+    model.load_weights(h5_fname)
     return model
 
 

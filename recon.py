@@ -7,7 +7,6 @@ import os
 from adain.utils import preprocess, plot
 from adain import MODEL_ROOT, PROJECT_ROOT
 
-DEFAULT_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
 DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
 content_fname="input/content/chicago.jpg"
@@ -33,7 +32,6 @@ if __name__ == '__main__':
     from adain.decoder import combine_and_decode_model
     from adain.transfer_decoder import build_mobile_combine_decoder
     vgg_encoder = vgg_encoder(input_shape=[encoder_input,encoder_input,3])
-    vgg_encoder.load_weights(DEFAULT_ENCODER_H5)
     vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input,
                                                    include_post_process=False)
     mobile_decoder = build_mobile_combine_decoder(vgg_combine_decoder)
