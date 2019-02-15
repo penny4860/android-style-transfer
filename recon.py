@@ -31,12 +31,12 @@ if __name__ == '__main__':
     # 3. encoding
     from adain.encoder import vgg_encoder
     from adain.decoder import combine_and_decode_model
-    from train_decoder2 import build_model
+    from adain.transfer_decoder import build_mobile_combine_decoder
     vgg_encoder = vgg_encoder(input_shape=[encoder_input,encoder_input,3])
     vgg_encoder.load_weights(DEFAULT_ENCODER_H5)
-    mobile_decoder = build_model(combine_and_decode_model(input_shape=[decoder_input,decoder_input,512], model="vgg"))
-    mobile_decoder.summary()
-    print(len(mobile_decoder.layers))
+    vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input,
+                                                   include_post_process=False)
+    mobile_decoder = build_mobile_combine_decoder(vgg_combine_decoder)
     mobile_decoder.load_weights("mobile_decoder.h5")
 
     c_features = vgg_encoder.predict(c_img_prep)
