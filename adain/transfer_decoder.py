@@ -98,7 +98,8 @@ def build_mobile_combine_decoder(feature_size=32, num_new_blocks=1):
         x = build_mobile_b1(x)
         model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
     elif num_new_blocks == 4:
-        x = vgg_combine_decoder.layers[0].output
+        vgg_output_layer_name = "adain"
+        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
         x = build_mobile_b4(x)
         x = build_mobile_b3(x)
         x = build_mobile_b2(x)
@@ -118,8 +119,16 @@ if __name__ == '__main__':
     input_size = 256
     feature_size = int(input_size/8)  
 
-    vgg_combine_decoder = combine_and_decode_model(feature_size=feature_size,
-                                                   include_post_process=False)
-    mobile_combine_decoder = build_mobile_combine_decoder(vgg_combine_decoder)
+    mobile_combine_decoder = build_mobile_combine_decoder(feature_size, 4)
     mobile_combine_decoder.summary()
 
+
+# 3. 
+# Total params: 1,461,763
+# Trainable params: 276,867
+# Non-trainable params: 1,184,896
+
+# 2.
+# Total params: 3,280,771
+# Trainable params: 34,435
+# Non-trainable params: 3,246,336

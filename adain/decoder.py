@@ -79,7 +79,7 @@ def combine_and_decode_model(feature_size=32,
     c_feat_input = Input(shape=input_shape, name="input_c")
     s_feat_input = Input(shape=input_shape, name="input_s")
     
-    x = AdaIN(alpha)([c_feat_input, s_feat_input])
+    x = AdaIN(alpha, name="adain")([c_feat_input, s_feat_input])
     x = build_vgg_decoder(x, include_post_process)
 
     model = Model([c_feat_input, s_feat_input], x, name='decoder')
