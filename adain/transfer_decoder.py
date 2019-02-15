@@ -2,7 +2,6 @@
 # import modules
 import numpy as np
 import os
-import glob
 import tensorflow as tf
 import keras
 
@@ -38,25 +37,70 @@ else:
     Activateion = keras.layers.Activation
 
 
-def build_mobile_combine_decoder(vgg_combine_decoder, vgg_output_block=2):
+def depthwise_separable_block(x, out_filters, block_idx, layer_idx):
+    x = SpatialReflectionPadding()(x)
+    x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid',
+                        name='b{}_layer{}_depthconv3x3'.format(block_idx, layer_idx))(x)
+    x = BatchNormalization(name='b{}_layer{}_bn_d'.format(block_idx, layer_idx))(x)
+    x = Activateion("relu")(x)
+    x = Conv2D(out_filters, (1, 1), use_bias=False, padding='valid', name='b{}_layer{}_conv1x1'.format(block_idx, layer_idx))(x)
+    x = BatchNormalization(name='b{}_layer{}_bn_p'.format(block_idx, layer_idx))(x)
+    x = Activateion("relu")(x)
+    return x
+
+
+def build_mobile_b4(x):
+    x = depthwise_separable_block(x, 256, block_idx=4, layer_idx=1)
+    x = UpSampling2D(name="b4_output")(x)
+    return x
+
+def build_mobile_b3(x):
+    x = depthwise_separable_block(x, 256, block_idx=3, layer_idx=4)
+    x = depthwise_separable_block(x, 256, block_idx=3, layer_idx=3)
+    x = depthwise_separable_block(x, 256, block_idx=3, layer_idx=2)
+    x = depthwise_separable_block(x, 128, block_idx=3, layer_idx=1)
+    x = UpSampling2D(name="b3_output")(x)
+    return x
+
+def build_mobile_b2(x):
+    x = depthwise_separable_block(x, 128, block_idx=2, layer_idx=2)
+    x = depthwise_separable_block(x, 64, block_idx=2, layer_idx=1)
+    x = UpSampling2D(name="b2_output")(x)
+    return x
+
+def build_mobile_b1(x):
+    x = depthwise_separable_block(x, 64, block_idx=1, layer_idx=2)
+    x = SpatialReflectionPadding(name="b1_layer1_pad")(x)
+    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
+    return x
+
+
+def build_mobile_combine_decoder(vgg_combine_decoder, num_new_blocks=1):
+
     
-    def build_mobile_b1(x):
-        x = SpatialReflectionPadding()(x)
-        x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid', name='b1_layer3_depthconv3x3')(x)
-        x = BatchNormalization(name='b1_layer3_bn')(x)
-        x = Activateion("relu")(x)
-        x = Conv2D(64, (1, 1), use_bias=False, padding='valid', name='b1_layer2_conv1x1')(x)
-        x = BatchNormalization(name='b1_layer2_bn')(x)
-        x = Activateion("relu")(x)
-        
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
-        return x
-    
-    vgg_output_layer_name = "b{}_output".format(vgg_output_block)
-    x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
-    
-    if vgg_output_block == 2:
+    if num_new_blocks == 1:
+        vgg_output_layer_name = "b2_output"
+        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
+        x = build_mobile_b1(x)
+        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    elif num_new_blocks == 2:
+        vgg_output_layer_name = "b3_output"
+        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
+        x = build_mobile_b2(x)
+        x = build_mobile_b1(x)
+        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    elif num_new_blocks == 3:
+        vgg_output_layer_name = "b4_output"
+        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
+        x = build_mobile_b3(x)
+        x = build_mobile_b2(x)
+        x = build_mobile_b1(x)
+        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    elif num_new_blocks == 4:
+        x = vgg_combine_decoder.layers[0].output
+        x = build_mobile_b4(x)
+        x = build_mobile_b3(x)
+        x = build_mobile_b2(x)
         x = build_mobile_b1(x)
         model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
     
@@ -75,7 +119,6 @@ if __name__ == '__main__':
 
     vgg_combine_decoder = combine_and_decode_model(feature_size=feature_size,
                                                    include_post_process=False)
-    vgg_combine_decoder.summary()
     mobile_combine_decoder = build_mobile_combine_decoder(vgg_combine_decoder)
     mobile_combine_decoder.summary()
 
