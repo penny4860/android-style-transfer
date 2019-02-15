@@ -5,7 +5,11 @@ import cv2
 import os
 
 from adain.utils import preprocess, plot
-from adain import MODEL_ROOT, PROJECT_ROOT
+from adain import MODEL_ROOT
+from adain.encoder import vgg_encoder
+from adain.decoder import combine_and_decode_model
+from adain.transfer_decoder import build_mobile_combine_decoder
+
 
 DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
@@ -28,17 +32,14 @@ if __name__ == '__main__':
     s_img_prep = preprocess(s_img, (encoder_input,encoder_input))
     
     # 3. encoding
-    from adain.encoder import vgg_encoder
-    from adain.decoder import combine_and_decode_model
-    from adain.transfer_decoder import build_mobile_combine_decoder
-    vgg_encoder = vgg_encoder(input_shape=[encoder_input,encoder_input,3])
+    encoder = vgg_encoder(input_shape=[encoder_input,encoder_input,3])
     vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input,
                                                    include_post_process=False)
     mobile_decoder = build_mobile_combine_decoder(vgg_combine_decoder)
     mobile_decoder.load_weights("mobile_decoder.h5")
 
-    c_features = vgg_encoder.predict(c_img_prep)
-    s_features = vgg_encoder.predict(s_img_prep)
+    c_features = encoder.predict(c_img_prep)
+    s_features = encoder.predict(s_img_prep)
 
     stylized_imgs = mobile_decoder.predict([c_features, s_features])
     stylized_img = stylized_imgs[0]
