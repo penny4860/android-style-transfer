@@ -39,32 +39,32 @@ def build_vgg_decoder(input_features, include_post_process):
     
     # Block 4
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block4_conv1_decode')(x)
+    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='b4_layer1_conv3x3')(x)
     x = UpSampling2D()(x)
 
     # Block 3
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv1_decode')(x)
+    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='b3_layer4_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv2_decode')(x)
+    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='b3_layer3_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv3_decode')(x)
+    x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='b3_layer2_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block3_conv4_decode')(x)
+    x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='b3_layer1_conv3x3')(x)
     x = UpSampling2D()(x)
 
     # Block 2
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv1_decode')(x)
+    x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='b2_layer2_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block2_conv2_decode')(x)
+    x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='b2_layer1_conv3x3')(x)
     x = UpSampling2D()(x)
 
     # Block 1
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1_decode')(x)
+    x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='b1_layer2_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
-    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='block1_conv2_decode')(x)
+    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
     if include_post_process:
         x = PostPreprocess(name="output")(x)
     return x
