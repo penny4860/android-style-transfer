@@ -18,6 +18,13 @@ style_fname="input/style/asheville.jpg"
 alpha = 1.0
 
 
+def postprocess(image):
+    image[image > 1] = 1
+    image[image < 0] = 0
+    image *= 255
+    image = image.astype(np.uint8)
+    return image
+
 if __name__ == '__main__':
     
     encoder_input = 512
@@ -42,11 +49,7 @@ if __name__ == '__main__':
     s_features = encoder.predict(s_img_prep)
 
     stylized_imgs = mobile_decoder.predict([c_features, s_features])
-    stylized_img = stylized_imgs[0]
-    stylized_img[stylized_img > 1] = 1
-    stylized_img[stylized_img < 0] = 0
-    stylized_img *= 255
-    stylized_img = stylized_img.astype(np.uint8)
+    img = postprocess(stylized_imgs[0])
 
     # 5. plot
-    plot([c_img, s_img, stylized_img])
+    plot([c_img, s_img, img])
