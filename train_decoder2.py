@@ -66,28 +66,6 @@ else:
     Activateion = keras.layers.Activation
 
 
-def build_model(vgg_combine_decoder):
-    x = vgg_combine_decoder.get_layer("spatial_reflection_padding_17").output
-
-    x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid', name='b1_layer3_depthconv3x3')(x)
-    x = BatchNormalization(name='b1_layer3_bn')(x)
-    x = Activateion("relu")(x)
-    x = Conv2D(64, (1, 1), use_bias=False, padding='valid', name='b1_layer2_conv1x1')(x)
-    x = BatchNormalization(name='b1_layer2_bn')(x)
-    x = Activateion("relu")(x)
-    
-    x = SpatialReflectionPadding()(x)
-    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
-    model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
-    
-    for layer in model.layers:
-        if layer.name == "spatial_reflection_padding_17":
-            break
-        layer.trainable = False
-        print(layer.name)
-    return model
-
-
 def loss_func(y_true, y_pred):
     # 1. activate prediction & truth tensor
     style_loss = tf.losses.mean_squared_error(y_true, y_pred)
@@ -95,26 +73,24 @@ def loss_func(y_true, y_pred):
     loss = style_loss + 1e-8*tv_loss
     return loss
 
-
+from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
     
     input_size = 256
     decoder_input_size = int(input_size/8)
 
-    vgg_encoder_model = vgg_encoder(input_shape=[input_size,input_size,3])
-    vgg_encoder_model.load_weights(DEFAULT_VGG_ENCODER_H5)
-    vgg_combine_decoder = combine_and_decode_model(input_shape=[decoder_input_size,decoder_input_size,512],
-                                                   model="vgg",
+    vgg_encoder_model = vgg_encoder(input_size)
+    vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
                                                    include_post_process=False)
-    vgg_combine_decoder.load_weights(DEFAULT_VGG_DECODER_H5, by_name=False)
-    model = build_model(vgg_combine_decoder)
+    
+    model = build_mobile_combine_decoder(feature_size=decoder_input_size)
     model.load_weights("mobile_decoder.h5", by_name=True)
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
     print(len(c_fnames), len(s_fnames))
-      
+       
     # c_fnames, s_fnames, batch_size, shuffle, encoder_model, combine_decoder_model
     train_generator = CombineBatchGenerator(c_fnames,
                                             s_fnames,
@@ -123,7 +99,7 @@ if __name__ == '__main__':
                                             encoder_model=vgg_encoder_model,
                                             combine_decoder_model=vgg_combine_decoder,
                                             input_size=input_size)
-       
+        
     # 2. create loss function
     if USE_TF_KERAS:
         opt = tf.keras.optimizers.Adam(lr=args.learning_rate)
