@@ -18,9 +18,6 @@ DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
 DEFAULT_BATCH_SIZE = 4
 DEFAULT_LEARNING_RATE = 0.001
 DEFAULT_INIT_WEIGHTS = None
-DEFAULT_VGG_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
-DEFAULT_VGG_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
-
 
 argparser = argparse.ArgumentParser(description='Train mobile decoder')
 argparser.add_argument('-i',
@@ -43,7 +40,6 @@ argparser.add_argument('-l',
                        help='learning rate')
 
 
-from adain.layers import SpatialReflectionPadding
 if USE_TF_KERAS:
     Input = tf.keras.layers.Input
     Conv2D = tf.keras.layers.Conv2D
@@ -74,14 +70,15 @@ def loss_func(y_true, y_pred):
     return loss
 
 
-def create_models(input_size):
+def create_models(input_size, num_new_blocks):
     
     decoder_input_size = int(input_size/8)
     vgg_encoder_model = vgg_encoder(input_size)
     vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
                                                    include_post_process=False)
     
-    model = build_mobile_combine_decoder(feature_size=decoder_input_size)
+    model = build_mobile_combine_decoder(feature_size=decoder_input_size,
+                                         num_new_blocks=num_new_blocks)
     model.load_weights("mobile_decoder.h5", by_name=True)
     return vgg_encoder_model, vgg_combine_decoder, model
 
@@ -91,7 +88,8 @@ if __name__ == '__main__':
     args = argparser.parse_args()
     
     input_size = 256
-    vgg_encoder_model, vgg_combine_decoder, model = create_models(input_size)
+    num_new_blocks = 2
+    vgg_encoder_model, vgg_combine_decoder, model = create_models(input_size, num_new_blocks)
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
