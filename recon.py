@@ -32,7 +32,7 @@ if __name__ == '__main__':
     s_img_prep = preprocess(s_img, (encoder_input,encoder_input))
     
     # 3. encoding
-    encoder = vgg_encoder(input_shape=[encoder_input,encoder_input,3])
+    encoder = vgg_encoder(input_size=encoder_input)
     vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input,
                                                    include_post_process=False)
     mobile_decoder = build_mobile_combine_decoder(vgg_combine_decoder)

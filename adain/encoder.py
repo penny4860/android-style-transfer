@@ -31,7 +31,7 @@ else:
     Model = keras.models.Model
 
 
-def vgg_encoder(input_shape=[None,None,3],
+def vgg_encoder(input_size=256,
                 h5_fname=VGG_ENCODER_H5):
     
     def _build_model(input_shape):
@@ -69,6 +69,8 @@ def vgg_encoder(input_shape=[None,None,3],
         x = Conv2D(512, (3, 3), activation='relu', padding='valid', name="output")(x)
         model = Model(img_input, x, name='vgg19')
         return model
+
+    input_shape=[input_size,input_size,3]
     model = _build_model(input_shape)
     model.load_weights(h5_fname)
     return model
