@@ -73,19 +73,25 @@ def loss_func(y_true, y_pred):
     loss = style_loss + 1e-8*tv_loss
     return loss
 
-from adain.transfer_decoder import build_mobile_combine_decoder
-if __name__ == '__main__':
-    args = argparser.parse_args()
-    
-    input_size = 256
-    decoder_input_size = int(input_size/8)
 
+def create_models(input_size):
+    
+    decoder_input_size = int(input_size/8)
     vgg_encoder_model = vgg_encoder(input_size)
     vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
                                                    include_post_process=False)
     
     model = build_mobile_combine_decoder(feature_size=decoder_input_size)
     model.load_weights("mobile_decoder.h5", by_name=True)
+    return vgg_encoder_model, vgg_combine_decoder, model
+
+
+from adain.transfer_decoder import build_mobile_combine_decoder
+if __name__ == '__main__':
+    args = argparser.parse_args()
+    
+    input_size = 256
+    vgg_encoder_model, vgg_combine_decoder, model = create_models(input_size)
      
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
@@ -101,12 +107,8 @@ if __name__ == '__main__':
                                             input_size=input_size)
         
     # 2. create loss function
-    if USE_TF_KERAS:
-        opt = tf.keras.optimizers.Adam(lr=args.learning_rate)
-    else:
-        opt = keras.optimizers.Adam(lr=args.learning_rate)
     model.compile(loss=loss_func,
-                  optimizer=opt)
+                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
     model.fit_generator(train_generator,
                         steps_per_epoch=len(train_generator),
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
