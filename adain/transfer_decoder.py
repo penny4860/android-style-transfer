@@ -75,8 +75,9 @@ def build_mobile_b1(x):
     return x
 
 
-def build_mobile_combine_decoder(vgg_combine_decoder, num_new_blocks=1):
-
+def build_mobile_combine_decoder(feature_size=32, num_new_blocks=1):
+    
+    vgg_combine_decoder = combine_and_decode_model(feature_size=feature_size)
     
     if num_new_blocks == 1:
         vgg_output_layer_name = "b2_output"
