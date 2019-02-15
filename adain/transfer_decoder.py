@@ -40,20 +40,25 @@ else:
 
 def build_mobile_combine_decoder(vgg_combine_decoder, vgg_output_block=2):
     
+    def build_mobile_b1(x):
+        x = SpatialReflectionPadding()(x)
+        x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid', name='b1_layer3_depthconv3x3')(x)
+        x = BatchNormalization(name='b1_layer3_bn')(x)
+        x = Activateion("relu")(x)
+        x = Conv2D(64, (1, 1), use_bias=False, padding='valid', name='b1_layer2_conv1x1')(x)
+        x = BatchNormalization(name='b1_layer2_bn')(x)
+        x = Activateion("relu")(x)
+        
+        x = SpatialReflectionPadding()(x)
+        x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
+        return x
+    
     vgg_output_layer_name = "b{}_output".format(vgg_output_block)
     x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
-
-    x = SpatialReflectionPadding()(x)
-    x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid', name='b1_layer3_depthconv3x3')(x)
-    x = BatchNormalization(name='b1_layer3_bn')(x)
-    x = Activateion("relu")(x)
-    x = Conv2D(64, (1, 1), use_bias=False, padding='valid', name='b1_layer2_conv1x1')(x)
-    x = BatchNormalization(name='b1_layer2_bn')(x)
-    x = Activateion("relu")(x)
     
-    x = SpatialReflectionPadding()(x)
-    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
-    model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    if vgg_output_block == 2:
+        x = build_mobile_b1(x)
+        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
     
     for layer in model.layers:
         if layer.name == vgg_output_layer_name:
