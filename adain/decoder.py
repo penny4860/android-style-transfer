@@ -40,7 +40,7 @@ def build_vgg_decoder(input_features, include_post_process):
     # Block 4
     x = SpatialReflectionPadding()(x)
     x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='vgg_decoder_b4_layer1_conv3x3')(x)
-    x = UpSampling2D()(x)
+    x = UpSampling2D(name="b4_output")(x)
 
     # Block 3
     x = SpatialReflectionPadding()(x)
@@ -51,14 +51,14 @@ def build_vgg_decoder(input_features, include_post_process):
     x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='vgg_decoder_b3_layer2_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
     x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='vgg_decoder_b3_layer1_conv3x3')(x)
-    x = UpSampling2D()(x)
+    x = UpSampling2D(name="b3_output")(x)
 
     # Block 2
     x = SpatialReflectionPadding()(x)
     x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='vgg_decoder_b2_layer2_conv3x3')(x)
     x = SpatialReflectionPadding()(x)
     x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='vgg_decoder_b2_layer1_conv3x3')(x)
-    x = UpSampling2D()(x)
+    x = UpSampling2D(name="b2_output")(x)
 
     # Block 1
     x = SpatialReflectionPadding()(x)
