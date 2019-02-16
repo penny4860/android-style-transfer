@@ -6,4 +6,4 @@ PROJECT_ROOT = os.path.dirname(PKG_ROOT)
 MODEL_ROOT = os.path.join(PKG_ROOT, "models")
 USE_TF_KERAS = False
 
-DEFAULT_NEW_BLOCK = 2
+DEFAULT_NEW_BLOCK = 3
