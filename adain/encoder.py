@@ -9,6 +9,7 @@ from adain.layers import VggPreprocess, SpatialReflectionPadding
 from adain import MODEL_ROOT
 
 VGG_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
+MOBILE_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "mobile_encoder.h5")
 
 
 if USE_TF_KERAS:
@@ -76,7 +77,7 @@ def vgg_encoder(input_size=256,
     return model
 
 
-def mobile_encoder(input_size=256):
+def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
 
     input_shape=[input_size,input_size,3]
     
@@ -148,6 +149,7 @@ def mobile_encoder(input_size=256):
     x = Activateion("relu", name="output")(x)
 
     model = Model(img_input, x, name='vgg19_light')
+    model.load_weights(h5_fname)
     return model
 
 
