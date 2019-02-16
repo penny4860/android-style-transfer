@@ -76,7 +76,9 @@ def vgg_encoder(input_size=256,
     return model
 
 
-def mobile_encoder(input_shape=[None,None,3]):
+def mobile_encoder(input_size=256):
+
+    input_shape=[input_size,input_size,3]
     
     x = Input(shape=input_shape, name="input")
     img_input = x
