@@ -27,7 +27,7 @@ def postprocess(image):
 
 if __name__ == '__main__':
     
-    encoder_input = 512
+    encoder_input = 256
     decoder_input = int(encoder_input/8)
     
     # 1. contents / style images
