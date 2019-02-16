@@ -96,8 +96,8 @@ if __name__ == '__main__':
     args = argparser.parse_args()
     vgg_encoder_model, vgg_combine_decoder, model = create_models(args.size, args.new_block)
      
-    c_fnames = glob.glob("input/content/*.*")
-    s_fnames = glob.glob("input/style/*.*")
+    c_fnames = glob.glob("input/content/chicago.jpg")
+    s_fnames = glob.glob("input/style/asheville.jpg")
     print(len(c_fnames), len(s_fnames))
        
     # c_fnames, s_fnames, batch_size, shuffle, encoder_model, combine_decoder_model
