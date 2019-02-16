@@ -5,7 +5,7 @@ import cv2
 import os
 
 from adain.utils import preprocess, plot
-from adain import MODEL_ROOT
+from adain import MODEL_ROOT, DEFAULT_NEW_BLOCK
 from adain.encoder import vgg_encoder
 from adain.transfer_decoder import build_mobile_combine_decoder
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     
     # 3. encoding
     encoder = vgg_encoder(input_size=encoder_input)
-    mobile_decoder = build_mobile_combine_decoder(decoder_input, 1)
+    mobile_decoder = build_mobile_combine_decoder(decoder_input, DEFAULT_NEW_BLOCK)
     mobile_decoder.load_weights("mobile_decoder.h5")
 
     c_features = encoder.predict(c_img_prep)

@@ -8,7 +8,7 @@ import keras
 import argparse
 
 np.random.seed(1337)
-from adain import MODEL_ROOT, USE_TF_KERAS
+from adain import MODEL_ROOT, USE_TF_KERAS, DEFAULT_NEW_BLOCK
 from adain.encoder import vgg_encoder
 from adain.decoder import combine_and_decode_model
 from adain.generator import CombineBatchGenerator, create_callbacks
@@ -19,7 +19,6 @@ DEFAULT_BATCH_SIZE = 4
 
 DEFAULT_LEARNING_RATE = 0.001
 DEFAULT_INPUT_SIZE = 256
-DEFAULT_NEW_BLOCK = 1
 
 
 argparser = argparse.ArgumentParser(description='Train mobile decoder')
