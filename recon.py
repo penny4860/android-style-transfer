@@ -6,7 +6,7 @@ import os
 
 from adain.utils import preprocess, plot
 from adain import MODEL_ROOT, DEFAULT_NEW_BLOCK
-from adain.encoder import vgg_encoder
+from adain.encoder import vgg_encoder, mobile_encoder
 from adain.transfer_decoder import build_mobile_combine_decoder
 
 
@@ -26,7 +26,7 @@ def postprocess(image):
 
 if __name__ == '__main__':
     
-    encoder_input = 256
+    encoder_input = 512
     decoder_input = int(encoder_input/8)
     
     # 1. contents / style images
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     s_img_prep = preprocess(s_img, (encoder_input,encoder_input))
     
     # 3. encoding
-    encoder = vgg_encoder(input_size=encoder_input)
+    encoder = mobile_encoder(input_size=encoder_input)
     mobile_decoder = build_mobile_combine_decoder(decoder_input, DEFAULT_NEW_BLOCK)
     mobile_decoder.load_weights("mobile_decoder.h5")
 
