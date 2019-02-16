@@ -75,7 +75,7 @@ def build_mobile_b1(x):
     return x
 
 
-def build_mobile_combine_decoder(feature_size=32, num_new_blocks=1):
+def build_mobile_combine_decoder(feature_size=32, num_new_blocks=4):
     
     vgg_combine_decoder = combine_and_decode_model(feature_size=feature_size)
     

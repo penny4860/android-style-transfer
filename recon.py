@@ -40,7 +40,7 @@ if __name__ == '__main__':
     
     # 3. encoding
     encoder = vgg_encoder(input_size=encoder_input)
-    mobile_decoder = build_mobile_combine_decoder(decoder_input, 4)
+    mobile_decoder = build_mobile_combine_decoder(decoder_input)
     mobile_decoder.load_weights("mobile_decoder.h5")
 
     c_features = encoder.predict(c_img_prep)
