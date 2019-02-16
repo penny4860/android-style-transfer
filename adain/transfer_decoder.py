@@ -41,10 +41,10 @@ def depthwise_separable_block(x, out_filters, block_idx, layer_idx):
     x = SpatialReflectionPadding()(x)
     x = DepthwiseConv2D((3, 3), use_bias=False, padding='valid',
                         name='b{}_layer{}_depthconv3x3'.format(block_idx, layer_idx))(x)
-    x = BatchNormalization(name='b{}_layer{}_bn_d'.format(block_idx, layer_idx))(x)
+    x = BatchNormalization(fused=False, name='b{}_layer{}_bn_d'.format(block_idx, layer_idx))(x)
     x = Activateion("relu")(x)
     x = Conv2D(out_filters, (1, 1), use_bias=False, padding='valid', name='b{}_layer{}_conv1x1'.format(block_idx, layer_idx))(x)
-    x = BatchNormalization(name='b{}_layer{}_bn_p'.format(block_idx, layer_idx))(x)
+    x = BatchNormalization(fused=False, name='b{}_layer{}_bn_p'.format(block_idx, layer_idx))(x)
     x = Activateion("relu")(x)
     return x
 
