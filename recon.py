@@ -7,7 +7,6 @@ import os
 from adain.utils import preprocess, plot
 from adain import MODEL_ROOT
 from adain.encoder import vgg_encoder
-from adain.decoder import combine_and_decode_model
 from adain.transfer_decoder import build_mobile_combine_decoder
 
 
