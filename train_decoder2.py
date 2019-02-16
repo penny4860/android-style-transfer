@@ -111,6 +111,13 @@ if __name__ == '__main__':
                                             encoder_model=vgg_encoder_model,
                                             combine_decoder_model=vgg_combine_decoder,
                                             input_size=args.size)
+    
+    # model.summary()
+    # b1_layer1_conv3x3 (Conv2D)
+    for layer in model.layers[:-1]:
+        print(layer.name)
+        layer.trainable = False
+        
         
     # 2. create loss function
     model.compile(loss=loss_func,
