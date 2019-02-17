@@ -11,12 +11,12 @@ if __name__ == '__main__':
     ##########################################################################
     pb_fname = "encoder.pb"
     output_pb_fname = "encoder_opt.pb"
-    input_node = "input"
-    output_node = "output/Relu"
+    input_node = "input_c,input_s"
+    output_node = "b1_layer1_conv3x3/Relu"
     ##########################################################################
 
-    model = mobile_encoder()
-    model.load_weights(PKG_ROOT + "/models/h5/mobile_encoder.h5")
+    model = build_mobile_combine_decoder()
+    model.load_weights(PKG_ROOT + "/models/h5/mobile_decoder.h5")
     model.summary()
         
     # 1. to frozen pb
