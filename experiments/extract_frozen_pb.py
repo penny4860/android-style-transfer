@@ -1,7 +1,7 @@
 
 import tensorflow as tf
 import subprocess
-from adain.graph import freeze_session
+from adain.graph import freeze_session, load_graph_from_pb
 from adain import PKG_ROOT
 
 if __name__ == '__main__':
@@ -34,5 +34,8 @@ if __name__ == '__main__':
             --input_names={} \
             --output_names={}'.format(pb_fname, output_pb_fname, input_node, output_node)
     subprocess.call(cmd, shell=True)
+
+    sess = load_graph_from_pb(output_pb_fname)
+    print(sess)
 
 
