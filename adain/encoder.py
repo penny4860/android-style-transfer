@@ -87,7 +87,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     # Block 1
     x = VggPreprocess()(x)
     x = Conv2D(32, (3, 3), strides=2, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (112,112,32)
 
@@ -95,7 +95,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(64, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (112,112,64)
 
@@ -104,7 +104,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = Activateion("relu")(x)
     # (56,56,64)
     x = Conv2D(128, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (56,56,128)
 
@@ -112,7 +112,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(128, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (56,56,128)
 
@@ -121,7 +121,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = Activateion("relu")(x)
     # (28,28,128)
     x = Conv2D(256, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (28,28,256)
 
@@ -129,7 +129,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(256, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (28,28,256)
 
@@ -137,7 +137,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(512, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (28,28,512)
 
@@ -145,7 +145,7 @@ def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(512, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu", name="output")(x)
 
     model = Model(img_input, x, name='vgg19_light')
