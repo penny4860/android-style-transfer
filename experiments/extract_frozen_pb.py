@@ -12,12 +12,12 @@ if __name__ == '__main__':
 
     ##########################################################################
     pb_fname = "decoder.pb"
-    output_pb_fname = "decoder_opt.pb"
+    output_pb_fname = "mobile_decoder_opt.pb"
     input_node = "input_c,input_s"
-    output_node = "b1_layer1_conv3x3/Relu"
+    output_node = "output_1/mul"
     ##########################################################################
 
-    model = build_mobile_combine_decoder()
+    model = build_mobile_combine_decoder(include_post_process=True)
     model.load_weights(PKG_ROOT + "/models/h5/mobile_decoder.h5")
     model.summary()
         
