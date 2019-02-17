@@ -2,9 +2,15 @@
 
 import tensorflow as tf
 import keras
+import os
 
 from adain import USE_TF_KERAS
 from adain.layers import VggPreprocess, SpatialReflectionPadding
+from adain import MODEL_ROOT
+
+VGG_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
+MOBILE_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "mobile_encoder.h5")
+
 
 if USE_TF_KERAS:
     Input = tf.keras.layers.Input
@@ -26,7 +32,8 @@ else:
     Model = keras.models.Model
 
 
-def vgg_encoder(input_shape=[None,None,3]):
+def vgg_encoder(input_size=256,
+                h5_fname=VGG_ENCODER_H5):
     
     def _build_model(input_shape):
         x = Input(shape=input_shape, name="input")
@@ -63,11 +70,16 @@ def vgg_encoder(input_shape=[None,None,3]):
         x = Conv2D(512, (3, 3), activation='relu', padding='valid', name="output")(x)
         model = Model(img_input, x, name='vgg19')
         return model
+
+    input_shape=[input_size,input_size,3]
     model = _build_model(input_shape)
+    model.load_weights(h5_fname)
     return model
 
 
-def mobile_encoder(input_shape=[None,None,3]):
+def mobile_encoder(input_size=256, h5_fname=MOBILE_ENCODER_H5):
+
+    input_shape=[input_size,input_size,3]
     
     x = Input(shape=input_shape, name="input")
     img_input = x
@@ -75,7 +87,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     # Block 1
     x = VggPreprocess()(x)
     x = Conv2D(32, (3, 3), strides=2, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (112,112,32)
 
@@ -83,7 +95,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(64, (1, 1), use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (112,112,64)
 
@@ -92,7 +104,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = Activateion("relu")(x)
     # (56,56,64)
     x = Conv2D(128, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (56,56,128)
 
@@ -100,7 +112,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(128, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (56,56,128)
 
@@ -109,7 +121,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = Activateion("relu")(x)
     # (28,28,128)
     x = Conv2D(256, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (28,28,256)
 
@@ -117,7 +129,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(256, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (28,28,256)
 
@@ -125,7 +137,7 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(512, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     # (28,28,512)
 
@@ -133,10 +145,11 @@ def mobile_encoder(input_shape=[None,None,3]):
     x = BatchNormalization(fused=False)(x)
     x = Activateion("relu")(x)
     x = Conv2D(512, (1, 1), strides=1, use_bias=False, padding='same')(x)
-    x = BatchNormalization()(x)
+    x = BatchNormalization(fused=False)(x)
     x = Activateion("relu", name="output")(x)
 
     model = Model(img_input, x, name='vgg19_light')
+    model.load_weights(h5_fname)
     return model
 
 

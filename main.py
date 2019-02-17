@@ -10,7 +10,7 @@ from adain.graph import load_graph_from_pb
 from adain import MODEL_ROOT
 
 DEFAULT_ENCODER_PB = os.path.join(MODEL_ROOT, "mobile_encoder_opt.pb")
-DEFAULT_DECODER_PB = os.path.join(MODEL_ROOT, "decoder_opt.pb")
+DEFAULT_DECODER_PB = os.path.join(MODEL_ROOT, "mobile_decoder_opt.pb")
 
 
 argparser = argparse.ArgumentParser(
@@ -61,23 +61,24 @@ if __name__ == '__main__':
     s_img = cv2.imread(style_fname)[:,:,::-1]
 
     # 2. load input imgs
-    c_img_prep = preprocess(c_img, (256,256))
-    s_img_prep = preprocess(s_img, (256,256))
+    c_img_prep = preprocess(c_img, (512,512))
+    s_img_prep = preprocess(s_img, (512,512))
     
     # 3. encoding
-    sess = load_graph_from_pb(args.encoder_pb)
+    sess = load_graph_from_pb(args.encoder_pb, print_op_name=True)
     tensor_input = sess.graph.get_tensor_by_name('import/input:0')
     tensor_output = sess.graph.get_tensor_by_name('import/output/Relu:0')
     c_feat = sess.run(tensor_output, {tensor_input: c_img_prep})
     s_feat = sess.run(tensor_output, {tensor_input: s_img_prep})
 
     # 4. mix & decoding
-    sess = load_graph_from_pb(args.decoder_pb)
+    sess = load_graph_from_pb(args.decoder_pb, print_op_name=True)
     tensor_input_c = sess.graph.get_tensor_by_name('import_1/input_c:0')
     tensor_input_s = sess.graph.get_tensor_by_name('import_1/input_s:0')
-    tensor_output = sess.graph.get_tensor_by_name('import_1/output/mul:0')
+    tensor_output = sess.graph.get_tensor_by_name('import_1/output_1/mul:0')
     stylized_imgs = sess.run(tensor_output, {tensor_input_c: c_feat, tensor_input_s: s_feat})
     stylized_img = stylized_imgs[0].astype(np.uint8)
+    print(stylized_imgs.max(), stylized_imgs.min())
    
     # 5. plot
     plot([c_img, s_img, stylized_img])
