@@ -15,8 +15,8 @@ if __name__ == '__main__':
     output_node = "b1_layer1_conv3x3/Relu"
     ##########################################################################
 
-    model = build_mobile_combine_decoder()
-    model.load_weights(PKG_ROOT + "/models/h5/mobile_decoder.h5")
+    model = mobile_encoder()
+    model.load_weights(PKG_ROOT + "/models/h5/mobile_encoder.h5")
     model.summary()
         
     # 1. to frozen pb
