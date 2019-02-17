@@ -8,7 +8,12 @@ if __name__ == '__main__':
     from adain.encoder import vgg_encoder, mobile_encoder
     from adain.transfer_decoder import build_mobile_combine_decoder
 
+    ##########################################################################
     pb_fname = "encoder.pb"
+    output_pb_fname = "encoder_opt.pb"
+    input_node = "input"
+    output_node = "output/Relu"
+    ##########################################################################
 
     model = mobile_encoder()
     model.load_weights(PKG_ROOT + "/models/h5/mobile_encoder.h5")
@@ -24,10 +29,10 @@ if __name__ == '__main__':
         print("op name: {}, shape: {}".format(t.op.name, t.shape))
 
     cmd = 'python -m tensorflow.python.tools.optimize_for_inference \
-            --input {} \
+            --input models/{} \
             --output {} \
             --input_names={} \
-            --output_names={}'.format("models/encoder.pb", "mobile_encoder_opt.pb", "input", "output/Relu")
+            --output_names={}'.format(pb_fname, output_pb_fname, input_node, output_node)
     subprocess.call(cmd, shell=True)
 
 
