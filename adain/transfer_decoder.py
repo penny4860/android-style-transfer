@@ -75,13 +75,19 @@ def build_mobile_b3(x):
     return x
 
 def build_mobile_b2(x):
+    shortcut = x
     x = depthwise_separable_block(x, 128, block_idx=2, layer_idx=2)
+    x = Add()([shortcut, x])
+
     x = depthwise_separable_block(x, 64, block_idx=2, layer_idx=1)
     x = UpSampling2D(name="b2_output")(x)
     return x
 
 def build_mobile_b1(x):
+    shortcut = x
     x = depthwise_separable_block(x, 64, block_idx=1, layer_idx=2)
+    x = Add()([shortcut, x])
+
     x = SpatialReflectionPadding(name="b1_layer1_pad")(x)
     x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
     return x
