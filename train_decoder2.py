@@ -17,7 +17,7 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
 DEFAULT_BATCH_SIZE = 4
 
-DEFAULT_LEARNING_RATE = 0.001
+DEFAULT_LEARNING_RATE = 0.0001
 DEFAULT_INPUT_SIZE = 256
 
 
@@ -95,11 +95,11 @@ if __name__ == '__main__':
     args = argparser.parse_args()
     vgg_encoder_model, vgg_combine_decoder, model = create_models(args.size, args.new_block)
      
-#     c_fnames = glob.glob("input/content/chicago.jpg")
-#     s_fnames = glob.glob("input/style/asheville.jpg")
+    c_fnames = glob.glob("input/content/chicago.jpg")
+    s_fnames = glob.glob("input/style/asheville.jpg")
     
-    c_fnames = glob.glob("input/content/*.*")
-    s_fnames = glob.glob("input/style/*.*")
+#     c_fnames = glob.glob("input/content/*.*")
+#     s_fnames = glob.glob("input/style/*.*")
     print(len(c_fnames), len(s_fnames))
        
     # c_fnames, s_fnames, batch_size, shuffle, encoder_model, combine_decoder_model
@@ -113,7 +113,7 @@ if __name__ == '__main__':
         
     # 2. create loss function
     model.compile(loss=loss_func,
-                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
+                  optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
     model.fit_generator(train_generator,
                         steps_per_epoch=len(train_generator),
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),

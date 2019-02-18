@@ -26,6 +26,7 @@ if USE_TF_KERAS:
     DepthwiseConv2D = tf.keras.layers.DepthwiseConv2D
     BatchNormalization = tf.keras.layers.BatchNormalization
     Activateion = tf.keras.layers.Activation
+    Add = tf.keras.layers.Add
 else:
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
@@ -36,6 +37,7 @@ else:
     DepthwiseConv2D = keras.layers.DepthwiseConv2D
     BatchNormalization = keras.layers.BatchNormalization
     Activateion = keras.layers.Activation
+    Add = keras.layers.Add
 
 
 def depthwise_separable_block(x, out_filters, block_idx, layer_idx):
@@ -56,9 +58,18 @@ def build_mobile_b4(x):
     return x
 
 def build_mobile_b3(x):
+    shortcut = x
     x = depthwise_separable_block(x, 256, block_idx=3, layer_idx=4)
+    x = Add()([shortcut, x])
+
+    shortcut = x
     x = depthwise_separable_block(x, 256, block_idx=3, layer_idx=3)
+    x = Add()([shortcut, x])
+
+    shortcut = x
     x = depthwise_separable_block(x, 256, block_idx=3, layer_idx=2)
+    x = Add()([shortcut, x])
+
     x = depthwise_separable_block(x, 128, block_idx=3, layer_idx=1)
     x = UpSampling2D(name="b3_output")(x)
     return x
