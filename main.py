@@ -10,7 +10,7 @@ from adain.graph import load_graph_from_pb
 from adain import MODEL_ROOT
 
 DEFAULT_ENCODER_PB = os.path.join(MODEL_ROOT, "mobile_encoder_opt.pb")
-DEFAULT_DECODER_PB = os.path.join(MODEL_ROOT, "mobile_decoder_opt.pb")
+DEFAULT_DECODER_PB = os.path.join(MODEL_ROOT, "decoder_opt_quantized.pb")
 
 
 argparser = argparse.ArgumentParser(
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     sess = load_graph_from_pb(args.decoder_pb, print_op_name=True)
     tensor_input_c = sess.graph.get_tensor_by_name('import_1/input_c:0')
     tensor_input_s = sess.graph.get_tensor_by_name('import_1/input_s:0')
-    tensor_output = sess.graph.get_tensor_by_name('import_1/output_1/mul:0')
+    tensor_output = sess.graph.get_tensor_by_name('import_1/output/mul:0')
     stylized_imgs = sess.run(tensor_output, {tensor_input_c: c_feat, tensor_input_s: s_feat})
     stylized_img = stylized_imgs[0].astype(np.uint8)
     print(stylized_imgs.max(), stylized_imgs.min())
