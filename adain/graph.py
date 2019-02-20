@@ -16,6 +16,18 @@ def load_graph_from_pb(pb_file="adain/models/encoder_opt.pb", print_op_name=Fals
             print(op.name)
     return sess
 
+def load_graph_def_from_pb(pb_file, print_op_name=False):
+    with tf.Session() as sess:
+        with tf.gfile.FastGFile(pb_file, 'rb') as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
+            sess.graph.as_default()
+            g_in = tf.import_graph_def(graph_def)
+        if print_op_name:
+            for op in sess.graph.get_operations():
+                print(op.name)
+    return graph_def
+
 
 def freeze_session(session, keep_var_names=None, output_names=None, clear_devices=True):
     """
