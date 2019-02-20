@@ -120,4 +120,4 @@ if __name__ == '__main__':
                         validation_data  = train_generator,
                         validation_steps = len(train_generator),
                         epochs=1000)
-
+    # https://distill.pub/2016/deconv-checkerboard/
