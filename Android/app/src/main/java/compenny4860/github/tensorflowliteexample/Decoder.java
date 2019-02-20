@@ -6,7 +6,7 @@ import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 public class Decoder {
     private TensorFlowInferenceInterface decoderInterface;
-    private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
+    private static final String MODEL_DECODER_FILE = "decoder_opt_quantized.pb";
 
     private static final String INPUT_C_NODE = "input_c";
     private static final String INPUT_S_NODE = "input_s";
