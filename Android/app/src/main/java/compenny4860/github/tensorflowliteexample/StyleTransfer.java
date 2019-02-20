@@ -10,7 +10,7 @@ public class StyleTransfer {
 
     private static final String TAG = "StyleTransferDemo";
 
-    private int mImgSize=256;
+    private int mImgSize=320;
     private int[] intValues = new int[mImgSize * mImgSize];
     private float[] floatValues = new float[mImgSize * mImgSize * 3];
 
