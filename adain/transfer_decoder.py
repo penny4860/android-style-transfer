@@ -66,13 +66,20 @@ def build_mobile_b3(x):
 def build_mobile_b2(x):
     x = depthwise_separable_block(x, 128, block_idx=2, layer_idx=2)
     x = depthwise_separable_block(x, 64, block_idx=2, layer_idx=1)
-    x = UpSampling2D(name="b2_output")(x)
+
+    x = tf.keras.layers.Conv2DTranspose(64, 3, dilation_rate=2, strides=2, padding="same")(x)
+    x = BatchNormalization(fused=False, name='b{}_layer{}_bn_d'.format(2, 0))(x)
+    x = Activateion("relu")(x)
+    
+    # x = UpSampling2D(name="b2_output")(x)
     return x
 
 def build_mobile_b1(x):
     x = depthwise_separable_block(x, 64, block_idx=1, layer_idx=2)
-    x = SpatialReflectionPadding(name="b1_layer1_pad")(x)
-    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
+    x = depthwise_separable_block(x, 3, block_idx=1, layer_idx=1)
+
+    # x = SpatialReflectionPadding(name="b1_layer1_pad")(x)
+    # x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
     return x
 
 
