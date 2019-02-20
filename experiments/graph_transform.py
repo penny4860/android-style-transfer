@@ -70,7 +70,7 @@ from adain import PKG_ROOT
 from tensorflow.python.platform import gfile
 if __name__ == "__main__":
     
-    pb_fname = os.path.join(PKG_ROOT, "models", "encoder_opt.pb")
+    pb_fname = os.path.join(PKG_ROOT, "models", "decoder_opt.pb")
     print(pb_fname)
     
     with tf.Session() as sess:
@@ -85,10 +85,10 @@ if __name__ == "__main__":
             print(op.name)
 
     print(type(graph_def))
-    input_names = ["input"]
-    output_names = ["output/Relu"]
+    input_names = ["input_c", "input_s"]
+    output_names = ["output/mul"]
     transforms = ["fold_constants(ignore_errors=true) fold_batch_norms fold_old_batch_norms quantize_weights"]
     transformed_graph_def = TransformGraph(graph_def, input_names, output_names, transforms)
     # def TransformGraph(input_graph_def, inputs, outputs, transforms):
-    tf.train.write_graph(transformed_graph_def, "tmp", "encoder_quantized.pb", as_text=False)
+    tf.train.write_graph(transformed_graph_def, "tmp", "decoder_quantized.pb", as_text=False)
 
