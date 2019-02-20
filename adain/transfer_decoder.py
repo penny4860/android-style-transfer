@@ -70,11 +70,9 @@ def build_mobile_b2(x):
     return x
 
 def build_mobile_b1(x):
-    x = depthwise_separable_block(x, 32, block_idx=1, layer_idx=2)
+    x = depthwise_separable_block(x, 64, block_idx=1, layer_idx=2)
     x = SpatialReflectionPadding(name="b1_layer1_pad")(x)
-    x = Conv2D(3, (3, 3), activation=None, padding='valid', name='b1_layer1_conv3x3')(x)
-    x = BatchNormalization(fused=False, name='b{}_layer{}_bn_d'.format(1, 1))(x)
-    x = Activateion("relu")(x)
+    x = Conv2D(3, (3, 3), activation='relu', padding='valid', name='b1_layer1_conv3x3')(x)
     return x
 
 
