@@ -44,23 +44,23 @@ def extract_feature_model(input_size=256, h5_fname=VGG_ENCODER_H5):
         x = SpatialReflectionPadding()(x)
         x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv2')(x)
         x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
-        
+         
         # Block 2
         x = SpatialReflectionPadding()(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv1')(x)
         x = SpatialReflectionPadding()(x)
         x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv2')(x)
-        x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
-        
-        # Block 3
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv2')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv3')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv4')(x)
+#         x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
+#         
+#         # Block 3
+#         x = SpatialReflectionPadding()(x)
+#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv1')(x)
+#         x = SpatialReflectionPadding()(x)
+#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv2')(x)
+#         x = SpatialReflectionPadding()(x)
+#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv3')(x)
+#         x = SpatialReflectionPadding()(x)
+#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv4')(x)
         
         model = Model(img_input, x, name='vgg19_extractor')
         return model
