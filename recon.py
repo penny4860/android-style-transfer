@@ -40,12 +40,13 @@ if __name__ == '__main__':
     # 3. encoding
     encoder = mobile_encoder(input_size=encoder_input)
     mobile_decoder = build_mobile_combine_decoder(decoder_input, DEFAULT_NEW_BLOCK)
-    mobile_decoder.load_weights("mobile_decoder.h5")
+    mobile_decoder.load_weights("mobile_decoder.h5", by_name=True)
 
     c_features = encoder.predict(c_img_prep)
     s_features = encoder.predict(s_img_prep)
 
     stylized_imgs = mobile_decoder.predict([c_features, s_features])
+    print(stylized_imgs.max(), stylized_imgs.min())
     img = postprocess(stylized_imgs[0])
 
     # 5. plot
