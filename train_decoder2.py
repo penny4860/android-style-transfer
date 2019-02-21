@@ -113,7 +113,7 @@ if __name__ == '__main__':
         
     # 2. create loss function
     model.compile(loss=loss_func,
-                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
+                  optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
     model.fit_generator(train_generator,
                         steps_per_epoch=len(train_generator),
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
