@@ -159,7 +159,7 @@ class CombineBatchGenerator(Sequence):
         
         xs = [c_features, s_features]
         ys = self.vgg_combine_decoder.predict(xs)
-        ys_features = self.feat_model(ys)
+        ys_features = self.feat_model.predict(ys)
         return xs, ys_features
 
     def on_epoch_end(self):

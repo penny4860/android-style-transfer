@@ -92,8 +92,8 @@ def create_models(input_size, num_new_blocks):
     feature_model = extract_feature_model()
     x = feature_model(x)
     model = Model(model.inputs, x, name='mobile_decoder_encoder')
-    model.summary()
     model.layers[-1].trainable = False
+    model.summary()
     # model.load_weights("mobile_decoder.h5", by_name=True)
     return vgg_encoder_model, vgg_combine_decoder, model
 
@@ -119,6 +119,9 @@ if __name__ == '__main__':
                                             encoder_model=vgg_encoder_model,
                                             combine_decoder_model=vgg_combine_decoder,
                                             input_size=args.size)
+    
+#     xs, ys = train_generator[0]
+#     print(xs[0].shape, xs[1].shape, ys.shape)
         
     # 2. create loss function
     model.compile(loss=loss_func,
