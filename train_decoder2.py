@@ -82,7 +82,7 @@ def create_models(input_size, num_new_blocks):
     decoder_input_size = int(input_size/8)
     vgg_encoder_model = vgg_encoder(input_size)
     vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
-                                                   include_post_process=False)
+                                                   include_post_process=True)
     
     model = build_mobile_combine_decoder(feature_size=decoder_input_size,
                                          num_new_blocks=num_new_blocks,
