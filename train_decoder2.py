@@ -17,7 +17,7 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
 DEFAULT_BATCH_SIZE = 4
 
-DEFAULT_LEARNING_RATE = 0.001
+DEFAULT_LEARNING_RATE = 0.0001
 DEFAULT_INPUT_SIZE = 256
 
 
