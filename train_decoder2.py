@@ -71,9 +71,15 @@ else:
 
 def loss_func(y_true, y_pred):
     # 1. activate prediction & truth tensor
-    style_loss = tf.losses.mean_squared_error(y_true, y_pred)
-    tv_loss = tf.reduce_mean(tf.image.total_variation(y_pred))
-    loss = style_loss + 1e-7*tv_loss
+    # style_loss = tf.losses.mean_squared_error(y_true, y_pred)
+    
+    from adain.encoder import extract_feature_model
+    model = extract_feature_model()
+    y_true_features = model.predict(y_true)
+    y_pred_features = model.predict(y_pred)
+    loss = tf.losses.mean_squared_error(y_true_features, y_pred_features)
+#     tv_loss = tf.reduce_mean(tf.image.total_variation(y_pred))
+#     loss = style_loss + 1e-7*tv_loss
     return loss
 
 
@@ -85,7 +91,8 @@ def create_models(input_size, num_new_blocks):
                                                    include_post_process=False)
     
     model = build_mobile_combine_decoder(feature_size=decoder_input_size,
-                                         num_new_blocks=num_new_blocks)
+                                         num_new_blocks=num_new_blocks,
+                                         include_post_process=True)
     model.load_weights("mobile_decoder.h5", by_name=True)
     return vgg_encoder_model, vgg_combine_decoder, model
 
