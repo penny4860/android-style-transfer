@@ -135,7 +135,7 @@ if __name__ == '__main__':
     student_combine_decoder.compile(loss=loss_func,
                   optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
     student_combine_decoder.fit_generator(train_generator,
-                        steps_per_epoch=len(train_generator),
+                        steps_per_epoch=len(train_generator) * 10,
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
                         validation_data  = train_generator,
                         validation_steps = len(train_generator),
