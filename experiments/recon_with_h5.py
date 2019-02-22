@@ -13,6 +13,7 @@ DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 content_fname="../input/content/chicago.jpg"
 style_fname="../input/style/asheville.jpg"
 alpha = 1.0
+img_size = 416
 
 
 if __name__ == '__main__':
@@ -22,14 +23,14 @@ if __name__ == '__main__':
     s_img = cv2.imread(style_fname)[:,:,::-1]
 
     # 2. load input imgs
-    c_img_prep = preprocess(c_img, (256,256))
-    s_img_prep = preprocess(s_img, (256,256))
+    c_img_prep = preprocess(c_img, (img_size,img_size))
+    s_img_prep = preprocess(s_img, (img_size,img_size))
     
     # 3. encoding
     from adain.encoder import vgg_encoder
     from adain.decoder import combine_and_decode_model
-    encoder = vgg_encoder(256)
-    decoder = combine_and_decode_model()
+    encoder = vgg_encoder(img_size)
+    decoder = combine_and_decode_model(img_size/8)
     encoder.load_weights(DEFAULT_ENCODER_H5)
     decoder.load_weights(DEFAULT_DECODER_H5)
 
