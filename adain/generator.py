@@ -130,10 +130,6 @@ class CombineBatchGenerator(Sequence):
         self.vgg_combine_decoder.predict([np.zeros((1,int(input_size/8),int(input_size/8),512)),
                                           np.zeros((1,int(input_size/8),int(input_size/8),512))])
         
-        from adain.encoder import extract_feature_model
-        self.feat_model = extract_feature_model(input_size)
-        self.feat_model.predict(np.zeros((1,input_size,input_size,3)))
-        
         self.on_epoch_end()
 
     def __len__(self):
@@ -159,8 +155,7 @@ class CombineBatchGenerator(Sequence):
         
         xs = [c_features, s_features]
         ys = self.vgg_combine_decoder.predict(xs)
-        ys_features = self.feat_model.predict(ys)
-        return xs, ys_features
+        return xs, ys
 
     def on_epoch_end(self):
         np.random.shuffle(self.c_fnames)

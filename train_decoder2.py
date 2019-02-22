@@ -77,33 +77,39 @@ def loss_func(y_true, y_pred):
     return loss
 
 
-def create_models(input_size, num_new_blocks):
+def create_models(input_size):
     
+    def add_feature_extraction_layer(model, name):
+        feature_model = extract_feature_model()
+        x = model.layers[-1].output
+        x = feature_model(x)
+        model_ = Model(model.inputs, x, name=name)
+        model_.layers[-1].trainable = False
+        return model_
+
     decoder_input_size = int(input_size/8)
     vgg_encoder_model = vgg_encoder(input_size)
-    vgg_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
+    for layer in vgg_encoder_model.layers:
+        layer.trainable = False
+    
+    teacher_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
                                                    include_post_process=True)
+    teacher_combine_decoder = add_feature_extraction_layer(teacher_combine_decoder, name="teacher_combine_decoder")
+    for layer in teacher_combine_decoder.layers:
+        layer.trainable = False
     
-    model = build_mobile_combine_decoder(feature_size=decoder_input_size,
-                                         num_new_blocks=num_new_blocks,
-                                         include_post_process=True)
-    
-    x = model.layers[-1].output
-    feature_model = extract_feature_model()
-    x = feature_model(x)
-    model = Model(model.inputs, x, name='mobile_decoder_encoder')
-    model.layers[-1].trainable = False
-    model.summary()
-    # model.load_weights("mobile_decoder.h5", by_name=True)
-    return vgg_encoder_model, vgg_combine_decoder, model
+    student_combine_decoder = build_mobile_combine_decoder(feature_size=decoder_input_size,
+                                                           include_post_process=True)
+    student_combine_decoder = add_feature_extraction_layer(student_combine_decoder, name="student_combine_decoder")
+    return vgg_encoder_model, teacher_combine_decoder, student_combine_decoder
 
 
 from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
-    vgg_encoder_model, vgg_combine_decoder, model = create_models(args.size, args.new_block)
-    # vgg_combine_decoder.summary()
-     
+    vgg_encoder_model, teacher_combine_decoder, student_combine_decoder = create_models(args.size)
+    # student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
+
     c_fnames = glob.glob("input/content/chicago.jpg")
     s_fnames = glob.glob("input/style/asheville.jpg")
     
@@ -117,16 +123,15 @@ if __name__ == '__main__':
                                             batch_size=min(args.batch_size, len(s_fnames), len(s_fnames)),
                                             shuffle=True,
                                             encoder_model=vgg_encoder_model,
-                                            combine_decoder_model=vgg_combine_decoder,
+                                            combine_decoder_model=teacher_combine_decoder,
                                             input_size=args.size)
     
-#     xs, ys = train_generator[0]
-#     print(xs[0].shape, xs[1].shape, ys.shape)
+    xs, ys = train_generator[0]
         
     # 2. create loss function
-    model.compile(loss=loss_func,
+    student_combine_decoder.compile(loss=loss_func,
                   optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
-    model.fit_generator(train_generator,
+    student_combine_decoder.fit_generator(train_generator,
                         steps_per_epoch=len(train_generator),
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
                         validation_data  = train_generator,
