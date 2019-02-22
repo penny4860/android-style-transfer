@@ -110,7 +110,7 @@ def create_models(input_size, add_feature_layer=False):
 from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
-    vgg_encoder_model, teacher_combine_decoder, student_combine_decoder = create_models(args.size)
+    vgg_encoder_model, teacher_combine_decoder, student_combine_decoder = create_models(args.size, True)
     student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
     # student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
 
