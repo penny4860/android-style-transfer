@@ -73,7 +73,8 @@ def loss_func(y_true, y_pred):
     # 1. activate prediction & truth tensor
     # style_loss = tf.losses.mean_squared_error(y_true, y_pred)
     # print(y_true.shape, y_pred.shape)
-    loss = tf.losses.mean_squared_error(y_true, y_pred) + 1e-4*tf.reduce_mean(tf.image.total_variation(y_pred))
+    # loss = tf.losses.mean_squared_error(y_true, y_pred) + 1e-4*tf.reduce_mean(tf.image.total_variation(y_pred))
+    loss = tf.losses.mean_squared_error(y_true, y_pred)
     return loss
 
 
@@ -110,8 +111,8 @@ from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
     vgg_encoder_model, teacher_combine_decoder, student_combine_decoder = create_models(args.size)
-    # student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
-    student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
+    student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
+    # student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
 
 #     c_fnames = glob.glob("input/content/chicago.jpg")
 #     s_fnames = glob.glob("input/style/asheville.jpg")
