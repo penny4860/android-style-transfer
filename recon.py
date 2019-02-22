@@ -13,7 +13,7 @@ from adain.transfer_decoder import build_mobile_combine_decoder
 DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
 content_fname="input/content/chicago.jpg"
-style_fname="input/style/asheville.jpg"
+style_fname="input/style/contrast_of_forms.jpg"
 alpha = 1.0
 
 
@@ -26,7 +26,7 @@ def postprocess(image):
 
 if __name__ == '__main__':
     
-    encoder_input = 256
+    encoder_input = 416
     decoder_input = int(encoder_input/8)
     
     # 1. contents / style images

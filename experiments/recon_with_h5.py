@@ -11,10 +11,9 @@ DEFAULT_ENCODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_encoder.h5")
 DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
 content_fname="../input/content/chicago.jpg"
-style_fname="../input/style/asheville.jpg"
+style_fname="../input/style/contrast_of_forms.jpg"
 alpha = 1.0
 img_size = 416
-
 
 if __name__ == '__main__':
     
