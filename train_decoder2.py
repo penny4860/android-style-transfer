@@ -73,7 +73,7 @@ def loss_func(y_true, y_pred):
     # 1. activate prediction & truth tensor
     # style_loss = tf.losses.mean_squared_error(y_true, y_pred)
     # print(y_true.shape, y_pred.shape)
-    loss = tf.losses.mean_squared_error(y_true, y_pred) + 1e-5*tf.reduce_mean(tf.image.total_variation(y_pred))
+    loss = tf.losses.mean_squared_error(y_true, y_pred) + 1e-4*tf.reduce_mean(tf.image.total_variation(y_pred))
     return loss
 
 
