@@ -42,7 +42,8 @@ def extract_feature_model(input_size=256, output_layer="block2_conv2"):
         x = VggPreprocess()(x)
         base_model = VGG19(input_shape=input_shape, include_top=False)
         model = Model(inputs=base_model.input, outputs=base_model.get_layer(output_layer).output)
-        model.load_weights("models/h5/vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5", by_name=True)
+        fname = os.path.join(MODEL_ROOT, "h5/vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5")
+        model.load_weights(fname, by_name=True)
         x = model(x)
 
         feat_model = Model(img_input, x, name='vgg19_extractor')
