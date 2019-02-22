@@ -17,7 +17,7 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
 DEFAULT_BATCH_SIZE = 8
 
-DEFAULT_LEARNING_RATE = 0.001
+DEFAULT_LEARNING_RATE = 0.0001
 DEFAULT_INPUT_SIZE = 256
 OUTPUT_LAYER = "block3_conv4"
 
@@ -111,8 +111,8 @@ from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
     vgg_encoder_model, teacher_combine_decoder, student_combine_decoder = create_models(args.size, True)
-#     student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
-    student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
+    student_combine_decoder.load_weights("mobile_decoder_block3.h5", by_name=True)
+    # student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
 
 #     c_fnames = glob.glob("input/content/chicago.jpg")
 #     s_fnames = glob.glob("input/style/asheville.jpg")
