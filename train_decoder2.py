@@ -15,7 +15,7 @@ from adain.generator import CombineBatchGenerator, create_callbacks
 
 
 DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
-DEFAULT_BATCH_SIZE = 4
+DEFAULT_BATCH_SIZE = 1
 
 DEFAULT_LEARNING_RATE = 0.001
 DEFAULT_INPUT_SIZE = 256
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     student_combine_decoder.compile(loss=loss_func,
                   optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
     student_combine_decoder.fit_generator(train_generator,
-                        steps_per_epoch=len(train_generator) * 10,
+                        steps_per_epoch=len(train_generator),
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
                         validation_data  = train_generator,
                         validation_steps = len(train_generator),
