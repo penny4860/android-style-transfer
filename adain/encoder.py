@@ -21,6 +21,7 @@ if USE_TF_KERAS:
     MaxPooling2D = tf.keras.layers.MaxPooling2D
     Layer = tf.keras.layers.Layer
     Model = tf.keras.models.Model
+    VGG19 = tf.keras.applications.vgg19.VGG19
 else:
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
@@ -30,44 +31,25 @@ else:
     MaxPooling2D = keras.layers.MaxPooling2D
     Layer = keras.layers.Layer
     Model = keras.models.Model
+    VGG19 = keras.applications.vgg19.VGG19
 
 
-def extract_feature_model(input_size=256, h5_fname=VGG_ENCODER_H5):
+def extract_feature_model(input_size=256, output_layer="block2_conv2"):
     def _build_model(input_shape):
         x = Input(shape=input_shape, name="input")
         img_input = x
-    
-        # Block 1
-        x = VggPreprocess()(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv2')(x)
-        x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
-         
-        # Block 2
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv2')(x)
-#         x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
-#         
-#         # Block 3
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv1')(x)
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv2')(x)
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv3')(x)
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv4')(x)
         
-        model = Model(img_input, x, name='vgg19_extractor')
-        return model
+        x = VggPreprocess()(x)
+        base_model = VGG19(input_shape=input_shape, include_top=False)
+        model = Model(inputs=base_model.input, outputs=base_model.get_layer(output_layer).output)
+        model.load_weights("models/h5/vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5", by_name=True)
+        x = model(x)
+
+        feat_model = Model(img_input, x, name='vgg19_extractor')
+        return feat_model
 
     input_shape=[input_size,input_size,3]
     model = _build_model(input_shape)
-    model.load_weights(h5_fname, by_name=True)
     return model
 
 
