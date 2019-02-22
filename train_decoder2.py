@@ -139,5 +139,5 @@ if __name__ == '__main__':
                         callbacks=create_callbacks(saved_weights_name="mobile_decoder.h5"),
                         validation_data  = train_generator,
                         validation_steps = len(train_generator),
-                        epochs=1000)
+                        epochs=2000)
 
