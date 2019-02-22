@@ -28,8 +28,8 @@ if __name__ == '__main__':
     # 3. encoding
     from adain.encoder import vgg_encoder
     from adain.decoder import combine_and_decode_model
-    encoder = vgg_encoder(input_shape=[256,256,3])
-    decoder = combine_and_decode_model(model="vgg", input_shape=[32,32,512])
+    encoder = vgg_encoder(256)
+    decoder = combine_and_decode_model()
     encoder.load_weights(DEFAULT_ENCODER_H5)
     decoder.load_weights(DEFAULT_DECODER_H5)
 
