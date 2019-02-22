@@ -50,6 +50,8 @@ def extract_feature_model(input_size=256, output_layer="block2_conv2"):
 
     input_shape=[input_size,input_size,3]
     model = _build_model(input_shape)
+    for layer in model.layers:
+        layer.trainable = False
     return model
 
 
