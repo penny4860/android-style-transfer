@@ -19,7 +19,7 @@ DEFAULT_BATCH_SIZE = 8
 
 DEFAULT_LEARNING_RATE = 0.001
 DEFAULT_INPUT_SIZE = 256
-
+OUTPUT_LAYER = "block3_conv4"
 
 argparser = argparse.ArgumentParser(description='Train mobile decoder')
 argparser.add_argument('-l',
@@ -81,7 +81,7 @@ def loss_func(y_true, y_pred):
 def create_models(input_size, add_feature_layer=False):
     
     def add_feature_extraction_layer(model, name):
-        feature_model = extract_feature_model()
+        feature_model = extract_feature_model(output_layer=OUTPUT_LAYER)
         x = model.layers[-1].output
         x = feature_model(x)
         model_ = Model(model.inputs, x, name=name)
@@ -111,8 +111,8 @@ from adain.transfer_decoder import build_mobile_combine_decoder
 if __name__ == '__main__':
     args = argparser.parse_args()
     vgg_encoder_model, teacher_combine_decoder, student_combine_decoder = create_models(args.size, True)
-    student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
-    # student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
+#     student_combine_decoder.load_weights("mobile_decoder.h5", by_name=True)
+    student_combine_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
 
 #     c_fnames = glob.glob("input/content/chicago.jpg")
 #     s_fnames = glob.glob("input/style/asheville.jpg")
