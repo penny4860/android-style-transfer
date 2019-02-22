@@ -77,7 +77,7 @@ def loss_func(y_true, y_pred):
     return loss
 
 
-def create_models(input_size):
+def create_models(input_size, add_feature_layer=False):
     
     def add_feature_extraction_layer(model, name):
         feature_model = extract_feature_model()
@@ -94,13 +94,15 @@ def create_models(input_size):
     
     teacher_combine_decoder = combine_and_decode_model(feature_size=decoder_input_size,
                                                    include_post_process=True)
-    teacher_combine_decoder = add_feature_extraction_layer(teacher_combine_decoder, name="teacher_combine_decoder")
+    if add_feature_layer:
+        teacher_combine_decoder = add_feature_extraction_layer(teacher_combine_decoder, name="teacher_combine_decoder")
     for layer in teacher_combine_decoder.layers:
         layer.trainable = False
     
     student_combine_decoder = build_mobile_combine_decoder(feature_size=decoder_input_size,
                                                            include_post_process=True)
-    student_combine_decoder = add_feature_extraction_layer(student_combine_decoder, name="student_combine_decoder")
+    if add_feature_layer:
+        student_combine_decoder = add_feature_extraction_layer(student_combine_decoder, name="student_combine_decoder")
     return vgg_encoder_model, teacher_combine_decoder, student_combine_decoder
 
 
