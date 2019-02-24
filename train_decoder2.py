@@ -8,7 +8,7 @@ import keras
 import argparse
 
 np.random.seed(1337)
-from adain import MODEL_ROOT, USE_TF_KERAS, DEFAULT_NEW_BLOCK
+from adain import MODEL_ROOT, USE_TF_KERAS
 from adain.encoder import vgg_encoder, extract_feature_model
 from adain.decoder import combine_and_decode_model
 from adain.generator import CombineBatchGenerator, create_callbacks
@@ -31,11 +31,6 @@ argparser.add_argument('-s',
                        '--size',
                        default=DEFAULT_INPUT_SIZE,
                        help='images directory')
-argparser.add_argument('-n',
-                       '--new_block',
-                       default=DEFAULT_NEW_BLOCK,
-                       help='images directory')
-
 argparser.add_argument('-i',
                        '--image_root',
                        default=DEFAULT_IMG_ROOT,

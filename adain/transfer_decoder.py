@@ -76,44 +76,19 @@ def build_mobile_b1(x):
     return x
 
 
-def build_mobile_combine_decoder(feature_size=32, num_new_blocks=4, include_post_process=False):
+def build_mobile_combine_decoder(feature_size=32, include_post_process=False):
     
     vgg_combine_decoder = combine_and_decode_model(feature_size=feature_size)
     
-    if num_new_blocks == 1:
-        vgg_output_layer_name = "b2_output"
-        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
-        x = build_mobile_b1(x)
-        if include_post_process:
-            x = PostPreprocess(name="output")(x)
-        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
-    elif num_new_blocks == 2:
-        vgg_output_layer_name = "b3_output"
-        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
-        x = build_mobile_b2(x)
-        x = build_mobile_b1(x)
-        if include_post_process:
-            x = PostPreprocess(name="output")(x)
-        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
-    elif num_new_blocks == 3:
-        vgg_output_layer_name = "b4_output"
-        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
-        x = build_mobile_b3(x)
-        x = build_mobile_b2(x)
-        x = build_mobile_b1(x)
-        if include_post_process:
-            x = PostPreprocess(name="output")(x)
-        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
-    elif num_new_blocks == 4:
-        vgg_output_layer_name = "adain"
-        x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
-        x = build_mobile_b4(x)
-        x = build_mobile_b3(x)
-        x = build_mobile_b2(x)
-        x = build_mobile_b1(x)
-        if include_post_process:
-            x = PostPreprocess(name="output")(x)
-        model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
+    vgg_output_layer_name = "adain"
+    x = vgg_combine_decoder.get_layer(vgg_output_layer_name).output
+    x = build_mobile_b4(x)
+    x = build_mobile_b3(x)
+    x = build_mobile_b2(x)
+    x = build_mobile_b1(x)
+    if include_post_process:
+        x = PostPreprocess(name="output")(x)
+    model = Model(vgg_combine_decoder.inputs, x, name='mobile_decoder')
 
     print("=================================================================")
     for layer in model.layers:
