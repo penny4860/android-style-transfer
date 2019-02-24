@@ -3,7 +3,7 @@
 import tensorflow as tf
 import subprocess
 from adain.graph import freeze_session, load_graph_from_pb
-from adain import PKG_ROOT
+from adain import PKG_ROOT, PROJECT_ROOT
 
 if __name__ == '__main__':
     from adain.encoder import vgg_encoder, mobile_encoder
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     ##########################################################################
 
     model = build_mobile_combine_decoder(include_post_process=True)
-    model.load_weights(PKG_ROOT + "/models/h5/mobile_decoder.h5")
+    model.load_weights(PROJECT_ROOT + "/mobile_decoder_block3.h5", by_name=True)
     model.summary()
         
     # 1. to frozen pb
@@ -29,14 +29,14 @@ if __name__ == '__main__':
     # input_c,input_s  / output/mul
     for t in model.inputs + model.outputs:
         print("op name: {}, shape: {}".format(t.op.name, t.shape))
-
+ 
     cmd = 'python -m tensorflow.python.tools.optimize_for_inference \
             --input models/{} \
             --output {} \
             --input_names={} \
             --output_names={}'.format(pb_fname, output_pb_fname, input_node, output_node)
     subprocess.call(cmd, shell=True)
-
+ 
     sess = load_graph_from_pb(output_pb_fname)
     print(sess)
 

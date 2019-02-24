@@ -13,7 +13,7 @@ from adain.transfer_decoder import build_mobile_combine_decoder
 DEFAULT_DECODER_H5 = os.path.join(MODEL_ROOT, "h5", "vgg_decoder.h5")
 
 content_fname="input/content/chicago.jpg"
-style_fname="input/style/asheville.jpg"
+style_fname="input/style/contrast_of_forms.jpg"
 alpha = 1.0
 
 
@@ -26,7 +26,7 @@ def postprocess(image):
 
 if __name__ == '__main__':
     
-    encoder_input = 512
+    encoder_input = 416
     decoder_input = int(encoder_input/8)
     
     # 1. contents / style images
@@ -40,12 +40,14 @@ if __name__ == '__main__':
     # 3. encoding
     encoder = mobile_encoder(input_size=encoder_input)
     mobile_decoder = build_mobile_combine_decoder(decoder_input, DEFAULT_NEW_BLOCK)
-    mobile_decoder.load_weights("mobile_decoder.h5")
+    # mobile_decoder.load_weights("adain/models/h5/mobile_decoder.h5", by_name=True)
+    mobile_decoder.load_weights("mobile_decoder.h5", by_name=True)
 
     c_features = encoder.predict(c_img_prep)
     s_features = encoder.predict(s_img_prep)
 
     stylized_imgs = mobile_decoder.predict([c_features, s_features])
+    print(stylized_imgs.max(), stylized_imgs.min())
     img = postprocess(stylized_imgs[0])
 
     # 5. plot

@@ -21,6 +21,7 @@ if USE_TF_KERAS:
     MaxPooling2D = tf.keras.layers.MaxPooling2D
     Layer = tf.keras.layers.Layer
     Model = tf.keras.models.Model
+    VGG19 = tf.keras.applications.vgg19.VGG19
 else:
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
@@ -30,6 +31,29 @@ else:
     MaxPooling2D = keras.layers.MaxPooling2D
     Layer = keras.layers.Layer
     Model = keras.models.Model
+    VGG19 = keras.applications.vgg19.VGG19
+
+
+def extract_feature_model(input_size=256, output_layer="block2_conv2"):
+    def _build_model(input_shape):
+        x = Input(shape=input_shape, name="input")
+        img_input = x
+        
+        x = VggPreprocess()(x)
+        base_model = VGG19(input_shape=input_shape, include_top=False)
+        model = Model(inputs=base_model.input, outputs=base_model.get_layer(output_layer).output)
+        fname = os.path.join(MODEL_ROOT, "h5/vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5")
+        model.load_weights(fname, by_name=True)
+        x = model(x)
+
+        feat_model = Model(img_input, x, name='vgg19_extractor')
+        return feat_model
+
+    input_shape=[input_size,input_size,3]
+    model = _build_model(input_shape)
+    for layer in model.layers:
+        layer.trainable = False
+    return model
 
 
 def vgg_encoder(input_size=256,
