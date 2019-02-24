@@ -6,11 +6,11 @@ import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 public class Decoder {
     private TensorFlowInferenceInterface decoderInterface;
-    private static final String MODEL_DECODER_FILE = "decoder_opt.pb";
+    private static final String MODEL_DECODER_FILE = "mobile_decoder_opt.pb";
 
     private static final String INPUT_C_NODE = "input_c";
     private static final String INPUT_S_NODE = "input_s";
-    private static final String OUTPUT_NODE = "output/mul";
+    private static final String OUTPUT_NODE = "output_1/mul";
 
     Decoder(Activity activity) {
         decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
