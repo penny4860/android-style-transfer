@@ -76,12 +76,12 @@ public class ImageFragment extends Fragment {
         v.findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                takingPicture = new TakingPicture();
-//
-//                Intent takePictureIntent = takingPicture.getTakePhotoIntent(getApplicationContext(),
-//                        getPackageManager(), getPackageName(),
-//                        getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-//                startActivityForResult(takePictureIntent, takingPicture.REQUEST_IMAGE_CAPTURE);
+                TakingPicture takingPicture = new TakingPicture();
+
+                Intent takePictureIntent = takingPicture.getTakePhotoIntent(getActivity().getApplicationContext(),
+                        getActivity().getPackageManager(), getActivity().getPackageName(),
+                        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+                startActivityForResult(takePictureIntent, takingPicture.REQUEST_IMAGE_CAPTURE);
                 Log.d(TAG, "camera button clicked");
             }
         });
