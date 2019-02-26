@@ -34,6 +34,7 @@ public class ImageFragment extends Fragment {
     private final LinkedList<String> mFileList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private ImageListAdapter mAdapter;
+    private TakingPicture mTakingPicture;
     /////////////////////////////////////////////////////////////////////////////////
 
 
@@ -73,19 +74,31 @@ public class ImageFragment extends Fragment {
         mRecyclerView.setLayoutManager(horizontalLayoutManagaer);
         /////////////////////////////////////////////////////////////////////////////////////////
 
+        mTakingPicture = new TakingPicture();
+
         v.findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TakingPicture takingPicture = new TakingPicture();
 
-                Intent takePictureIntent = takingPicture.getTakePhotoIntent(getActivity().getApplicationContext(),
+                Intent takePictureIntent = mTakingPicture.getTakePhotoIntent(getActivity().getApplicationContext(),
                         getActivity().getPackageManager(), getActivity().getPackageName(),
                         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-                startActivityForResult(takePictureIntent, takingPicture.REQUEST_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, mTakingPicture.REQUEST_IMAGE_CAPTURE);
                 Log.d(TAG, "camera button clicked");
             }
         });
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d(TAG, "onActivityResult");
+        Bitmap bitmap = mTakingPicture.getImage(requestCode, resultCode);
+        if (bitmap != null)
+        {
+            styleImageView.setImageBitmap(bitmap);
+        }
     }
 
     /** Load the model and labels. */
