@@ -2,10 +2,12 @@ package compenny4860.github.tensorflowliteexample;
 
 //package com.example.android.tflitecamerademo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +26,7 @@ import java.util.LinkedList;
 public class ImageFragment extends Fragment {
 
     private StyleTransfer styleTransfer;
-    private static final String TAG = "TfLiteImageClassifier";
+    private static final String TAG = "ImageFragment";
     private ImageView styleImageView ;
     public Bitmap contentBitmap;
 
@@ -70,6 +72,19 @@ public class ImageFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(horizontalLayoutManagaer);
         /////////////////////////////////////////////////////////////////////////////////////////
+
+        v.findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                takingPicture = new TakingPicture();
+//
+//                Intent takePictureIntent = takingPicture.getTakePhotoIntent(getApplicationContext(),
+//                        getPackageManager(), getPackageName(),
+//                        getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+//                startActivityForResult(takePictureIntent, takingPicture.REQUEST_IMAGE_CAPTURE);
+                Log.d(TAG, "camera button clicked");
+            }
+        });
         return v;
     }
 
