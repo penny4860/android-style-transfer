@@ -98,6 +98,7 @@ public class ImageFragment extends Fragment {
         if (bitmap != null)
         {
             styleImageView.setImageBitmap(bitmap);
+            contentBitmap = bitmap;
         }
     }
 
