@@ -85,7 +85,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
             Bitmap contentBitmap = null;
             Bitmap styleBitmap = null;
             try {
-                contentBitmap = ((BitmapDrawable)mImageFragment.styleImageView.getDrawable()).getBitmap();
+                contentBitmap = mImageFragment.contentBitmap;
                 styleBitmap = getImage(mFileList.get(mPosition));
 
             } catch (IOException e) {

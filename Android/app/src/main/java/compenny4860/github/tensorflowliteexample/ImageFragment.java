@@ -25,7 +25,8 @@ public class ImageFragment extends Fragment {
 
     private StyleTransfer styleTransfer;
     private static final String TAG = "TfLiteImageClassifier";
-    public ImageView styleImageView ;
+    private ImageView styleImageView ;
+    public Bitmap contentBitmap;
 
     /////////////////////////////////////////////////////////////////////////////////
     private final LinkedList<String> mFileList = new LinkedList<>();
@@ -49,6 +50,9 @@ public class ImageFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         styleImageView = v.findViewById(R.id.styleImageView);
+
+        // Todo: bitmap 객체를 효율적으로 갖고있는 방법 조사.
+        contentBitmap = ((BitmapDrawable)styleImageView.getDrawable()).getBitmap();
 
         /////////////////////////////////////////////////////////////////////////////////////////
         for (int i = 0; i < 26; i++) {
