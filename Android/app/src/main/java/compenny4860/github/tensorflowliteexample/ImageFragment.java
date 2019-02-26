@@ -2,10 +2,12 @@ package compenny4860.github.tensorflowliteexample;
 
 //package com.example.android.tflitecamerademo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +26,7 @@ import java.util.LinkedList;
 public class ImageFragment extends Fragment {
 
     private StyleTransfer styleTransfer;
-    private static final String TAG = "TfLiteImageClassifier";
+    private static final String TAG = "ImageFragment";
     private ImageView styleImageView ;
     public Bitmap contentBitmap;
 
@@ -32,6 +34,7 @@ public class ImageFragment extends Fragment {
     private final LinkedList<String> mFileList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private ImageListAdapter mAdapter;
+    private TakingPicture mTakingPicture;
     /////////////////////////////////////////////////////////////////////////////////
 
 
@@ -70,7 +73,33 @@ public class ImageFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(horizontalLayoutManagaer);
         /////////////////////////////////////////////////////////////////////////////////////////
+
+        mTakingPicture = new TakingPicture();
+
+        v.findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent takePictureIntent = mTakingPicture.getTakePhotoIntent(getActivity().getApplicationContext(),
+                        getActivity().getPackageManager(), getActivity().getPackageName(),
+                        getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+                startActivityForResult(takePictureIntent, mTakingPicture.REQUEST_IMAGE_CAPTURE);
+                Log.d(TAG, "camera button clicked");
+            }
+        });
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d(TAG, "onActivityResult");
+        Bitmap bitmap = mTakingPicture.getImage(requestCode, resultCode);
+        if (bitmap != null)
+        {
+            styleImageView.setImageBitmap(bitmap);
+            contentBitmap = bitmap;
+        }
     }
 
     /** Load the model and labels. */
