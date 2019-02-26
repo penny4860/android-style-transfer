@@ -25,7 +25,7 @@ public class ImageFragment extends Fragment {
 
     private StyleTransfer styleTransfer;
     private static final String TAG = "TfLiteImageClassifier";
-    private ImageView styleImageView ;
+    public ImageView styleImageView ;
 
     /////////////////////////////////////////////////////////////////////////////////
     private final LinkedList<String> mFileList = new LinkedList<>();
@@ -51,9 +51,8 @@ public class ImageFragment extends Fragment {
         styleImageView = v.findViewById(R.id.styleImageView);
 
         /////////////////////////////////////////////////////////////////////////////////////////
-        mFileList.addLast("dog.jpg");
-        for (int i = 1; i < 27; i++) {
-            mFileList.addLast("style" + (i-1) + ".jpg");
+        for (int i = 0; i < 26; i++) {
+            mFileList.addLast("style" + i + ".jpg");
         }
         // 1. recycler view.
         mRecyclerView = v.findViewById(R.id.recyclerview);
