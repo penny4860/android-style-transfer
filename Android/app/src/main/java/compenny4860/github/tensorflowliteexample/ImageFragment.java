@@ -26,6 +26,7 @@ public class ImageFragment extends Fragment {
     private StyleTransfer styleTransfer;
     private static final String TAG = "TfLiteImageClassifier";
     private ImageView styleImageView ;
+    public Bitmap contentBitmap;
 
     /////////////////////////////////////////////////////////////////////////////////
     private final LinkedList<String> mFileList = new LinkedList<>();
@@ -50,10 +51,12 @@ public class ImageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         styleImageView = v.findViewById(R.id.styleImageView);
 
+        // Todo: bitmap 객체를 효율적으로 갖고있는 방법 조사.
+        contentBitmap = ((BitmapDrawable)styleImageView.getDrawable()).getBitmap();
+
         /////////////////////////////////////////////////////////////////////////////////////////
-        mFileList.addLast("dog.jpg");
-        for (int i = 1; i < 27; i++) {
-            mFileList.addLast("style" + (i-1) + ".jpg");
+        for (int i = 0; i < 26; i++) {
+            mFileList.addLast("style" + i + ".jpg");
         }
         // 1. recycler view.
         mRecyclerView = v.findViewById(R.id.recyclerview);
