@@ -98,7 +98,7 @@ public class ImageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent pickPictureIntent = mPickPicture.getPickIntent();
-                startActivityForResult(pickPictureIntent, mPickPicture.PICK_IMAGE);
+                startActivityForResult(pickPictureIntent, mPickPicture.getRequestCode());
                 Log.d(TAG, "pick button clicked");
             }
         });
@@ -118,7 +118,7 @@ public class ImageFragment extends Fragment {
             {
                 bitmap = mTakingPicture.getImage();
             }
-            else if (requestCode == mPickPicture.PICK_IMAGE)
+            else if (requestCode == mPickPicture.getRequestCode())
             {
                 Uri imageUri = data.getData();
                 styleImageView.setImageURI(imageUri);
