@@ -89,7 +89,7 @@ public class ImageFragment extends Fragment {
                 Intent takePictureIntent = mTakingPicture.getTakePhotoIntent(getActivity().getApplicationContext(),
                         getActivity().getPackageManager(), getActivity().getPackageName(),
                         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-                startActivityForResult(takePictureIntent, mTakingPicture.REQUEST_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, mTakingPicture.getRequestCode());
                 Log.d(TAG, "camera button clicked");
             }
         });
@@ -114,7 +114,7 @@ public class ImageFragment extends Fragment {
         Bitmap bitmap = null;
         if (resultCode == RESULT_OK)
         {
-            if (requestCode == mTakingPicture.REQUEST_IMAGE_CAPTURE)
+            if (requestCode == mTakingPicture.getRequestCode())
             {
                 bitmap = mTakingPicture.getImage(requestCode, resultCode);
             }

@@ -20,7 +20,7 @@ import static android.app.Activity.RESULT_OK;
 
 class TakingPicture {
 
-    public static final int REQUEST_IMAGE_CAPTURE = 672;
+    private static final int REQUEST_IMAGE_CAPTURE = 672;
     private String imageFilePath;
     private Uri photoUri;
 
@@ -67,6 +67,11 @@ class TakingPicture {
             bitmap = rotate(bitmap, exifDegree);
         }
         return bitmap;
+    }
+
+    public int getRequestCode()
+    {
+        return REQUEST_IMAGE_CAPTURE;
     }
 
     private File createImageFile(File storageDir) throws IOException {
