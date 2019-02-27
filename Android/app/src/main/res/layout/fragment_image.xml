@@ -18,8 +18,10 @@
         android:layout_marginLeft="15sp"
         android:layout_alignBottom="@+id/styleImageView"
         android:layout_alignParentLeft="true"
+        app:backgroundTint="#615e5e"
         app:srcCompat="@drawable/ic_camera"
         app:elevation="3dp"
+        app:fabSize="mini"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -30,8 +32,10 @@
         android:layout_marginLeft="65sp"
         android:layout_alignBottom="@+id/styleImageView"
         android:layout_alignParentLeft="true"
+        app:backgroundTint="#615e5e"
         app:srcCompat="@drawable/ic_image"
         app:elevation="3dp"
+        app:fabSize="mini"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -42,8 +46,10 @@
         android:layout_marginRight="10sp"
         android:layout_alignBottom="@+id/styleImageView"
         android:layout_alignParentRight="true"
+        app:backgroundTint="#615e5e"
         app:srcCompat="@drawable/ic_save"
         app:elevation="3dp"
+        app:fabSize="mini"
         app:pressedTranslationZ="12dp" />
 
     <android.support.v7.widget.RecyclerView
