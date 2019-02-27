@@ -4,7 +4,9 @@ package compenny4860.github.tensorflowliteexample;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,8 +91,26 @@ public class ImageFragment extends Fragment {
                 Log.d(TAG, "camera button clicked");
             }
         });
+
+        v.findViewById(R.id.pick).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+
         return v;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    private static final int PICK_IMAGE = 100;
+    private void openGallery() {
+        Intent gallery =
+                new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -99,6 +121,12 @@ public class ImageFragment extends Fragment {
         {
             styleImageView.setImageBitmap(bitmap);
             contentBitmap = bitmap;
+        }
+
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            Uri imageUri = data.getData();
+            styleImageView.setImageURI(imageUri);
+            contentBitmap = ((BitmapDrawable)styleImageView.getDrawable()).getBitmap();
         }
     }
 
