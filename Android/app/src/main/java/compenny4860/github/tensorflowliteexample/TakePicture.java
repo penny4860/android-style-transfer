@@ -42,30 +42,27 @@ class TakingPicture {
         return takePictureIntent;
     }
 
-    public Bitmap getImage(int requestCode, int resultCode)
+    public Bitmap getImage()
     {
-        Bitmap bitmap = null;
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            bitmap = BitmapFactory.decodeFile(imageFilePath);
-            ExifInterface exif = null;
+        Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
+        ExifInterface exif = null;
 
-            try {
-                exif = new ExifInterface(imageFilePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            int exifOrientation;
-            int exifDegree;
-
-            if (exif != null) {
-                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                exifDegree = exifOrientationToDegrees(exifOrientation);
-            } else {
-                exifDegree = 0;
-            }
-            bitmap = rotate(bitmap, exifDegree);
+        try {
+            exif = new ExifInterface(imageFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        int exifOrientation;
+        int exifDegree;
+
+        if (exif != null) {
+            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            exifDegree = exifOrientationToDegrees(exifOrientation);
+        } else {
+            exifDegree = 0;
+        }
+        bitmap = rotate(bitmap, exifDegree);
         return bitmap;
     }
 

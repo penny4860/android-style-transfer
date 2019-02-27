@@ -116,7 +116,7 @@ public class ImageFragment extends Fragment {
         {
             if (requestCode == mTakingPicture.getRequestCode())
             {
-                bitmap = mTakingPicture.getImage(requestCode, resultCode);
+                bitmap = mTakingPicture.getImage();
             }
             else if (requestCode == mPickPicture.PICK_IMAGE)
             {
