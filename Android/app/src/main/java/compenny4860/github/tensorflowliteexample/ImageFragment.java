@@ -39,6 +39,7 @@ public class ImageFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ImageListAdapter mAdapter;
     private TakingPicture mTakingPicture;
+    private PickPicture mPickPicture;
     /////////////////////////////////////////////////////////////////////////////////
 
 
@@ -79,6 +80,7 @@ public class ImageFragment extends Fragment {
         /////////////////////////////////////////////////////////////////////////////////////////
 
         mTakingPicture = new TakingPicture();
+        mPickPicture = new PickPicture();
 
         v.findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,22 +97,14 @@ public class ImageFragment extends Fragment {
         v.findViewById(R.id.pick).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery();
+                Intent pickPictureIntent = mPickPicture.getPickIntent();
+                startActivityForResult(pickPictureIntent, mPickPicture.PICK_IMAGE);
+                Log.d(TAG, "pick button clicked");
             }
         });
 
         return v;
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    private static final int PICK_IMAGE = 100;
-    private void openGallery() {
-        Intent gallery =
-                new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -122,11 +116,13 @@ public class ImageFragment extends Fragment {
             styleImageView.setImageBitmap(bitmap);
             contentBitmap = bitmap;
         }
-
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            Uri imageUri = data.getData();
-            styleImageView.setImageURI(imageUri);
-            contentBitmap = ((BitmapDrawable)styleImageView.getDrawable()).getBitmap();
+        else
+        {
+            if (resultCode == RESULT_OK && requestCode == mPickPicture.PICK_IMAGE) {
+                Uri imageUri = data.getData();
+                styleImageView.setImageURI(imageUri);
+                contentBitmap = ((BitmapDrawable) styleImageView.getDrawable()).getBitmap();
+            }
         }
     }
 
