@@ -4,7 +4,9 @@ package compenny4860.github.tensorflowliteexample;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +39,7 @@ public class ImageFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ImageListAdapter mAdapter;
     private TakingPicture mTakingPicture;
+    private PickPicture mPickPicture;
     /////////////////////////////////////////////////////////////////////////////////
 
 
@@ -75,6 +80,7 @@ public class ImageFragment extends Fragment {
         /////////////////////////////////////////////////////////////////////////////////////////
 
         mTakingPicture = new TakingPicture();
+        mPickPicture = new PickPicture();
 
         v.findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +89,20 @@ public class ImageFragment extends Fragment {
                 Intent takePictureIntent = mTakingPicture.getTakePhotoIntent(getActivity().getApplicationContext(),
                         getActivity().getPackageManager(), getActivity().getPackageName(),
                         getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-                startActivityForResult(takePictureIntent, mTakingPicture.REQUEST_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, mTakingPicture.getRequestCode());
                 Log.d(TAG, "camera button clicked");
             }
         });
+
+        v.findViewById(R.id.pick).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickPictureIntent = mPickPicture.getPickIntent();
+                startActivityForResult(pickPictureIntent, mPickPicture.getRequestCode());
+                Log.d(TAG, "pick button clicked");
+            }
+        });
+
         return v;
     }
 
@@ -94,7 +110,20 @@ public class ImageFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d(TAG, "onActivityResult");
-        Bitmap bitmap = mTakingPicture.getImage(requestCode, resultCode);
+
+        Bitmap bitmap = null;
+        if (resultCode == RESULT_OK)
+        {
+            if (requestCode == mTakingPicture.getRequestCode())
+            {
+                bitmap = mTakingPicture.getImage();
+            }
+            else if (requestCode == mPickPicture.getRequestCode())
+            {
+                bitmap = mPickPicture.getImage(data, getActivity().getContentResolver());
+            }
+        }
+
         if (bitmap != null)
         {
             styleImageView.setImageBitmap(bitmap);
