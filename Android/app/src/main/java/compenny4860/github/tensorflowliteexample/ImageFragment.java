@@ -120,9 +120,7 @@ public class ImageFragment extends Fragment {
             }
             else if (requestCode == mPickPicture.getRequestCode())
             {
-                Uri imageUri = data.getData();
-                styleImageView.setImageURI(imageUri);
-                bitmap = ((BitmapDrawable) styleImageView.getDrawable()).getBitmap();
+                bitmap = mPickPicture.getImage(data, getActivity().getContentResolver());
             }
         }
 
