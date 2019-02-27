@@ -110,19 +110,26 @@ public class ImageFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d(TAG, "onActivityResult");
-        Bitmap bitmap = mTakingPicture.getImage(requestCode, resultCode);
+
+        Bitmap bitmap = null;
+        if (resultCode == RESULT_OK)
+        {
+            if (requestCode == mTakingPicture.REQUEST_IMAGE_CAPTURE)
+            {
+                bitmap = mTakingPicture.getImage(requestCode, resultCode);
+            }
+            else if (requestCode == mPickPicture.PICK_IMAGE)
+            {
+                Uri imageUri = data.getData();
+                styleImageView.setImageURI(imageUri);
+                bitmap = ((BitmapDrawable) styleImageView.getDrawable()).getBitmap();
+            }
+        }
+
         if (bitmap != null)
         {
             styleImageView.setImageBitmap(bitmap);
             contentBitmap = bitmap;
-        }
-        else
-        {
-            if (resultCode == RESULT_OK && requestCode == mPickPicture.PICK_IMAGE) {
-                Uri imageUri = data.getData();
-                styleImageView.setImageURI(imageUri);
-                contentBitmap = ((BitmapDrawable) styleImageView.getDrawable()).getBitmap();
-            }
         }
     }
 
