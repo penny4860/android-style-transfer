@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -102,6 +103,15 @@ public class ImageFragment extends Fragment {
                 Log.d(TAG, "pick button clicked");
             }
         });
+
+        v.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity().getApplicationContext(), "image saved!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         return v;
     }
