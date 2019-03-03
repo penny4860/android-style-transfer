@@ -94,10 +94,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
                 e.printStackTrace();
             }
 
-            CheckTypesTask task = new CheckTypesTask();
-            mImageFragment.runTransfer(contentBitmap, styleBitmap);
+            CheckTypesTask task = new CheckTypesTask(contentBitmap, styleBitmap);
             task.execute();
-
         }
     }
 
@@ -118,6 +116,16 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         ProgressDialog asyncDialog = new ProgressDialog(
                 mContext);
 
+        Bitmap contentBitmap;
+        Bitmap styleBitmap;
+
+        CheckTypesTask(Bitmap c, Bitmap s)
+        {
+            contentBitmap = c;
+            styleBitmap = s;
+        }
+
+
         @Override
         protected void onPreExecute() {
             asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -130,14 +138,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            try {
-                for (int i = 0; i < 5; i++) {
-                    //asyncDialog.setProgress(i * 30);
-                    Thread.sleep(500);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            mImageFragment.runTransfer(contentBitmap, styleBitmap);
             return null;
         }
 
