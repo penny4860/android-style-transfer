@@ -69,35 +69,53 @@ def vgg_encoder(input_size=256):
     model.load_weights(fname, by_name=True)
     return model
 
-
+import subprocess
+from adain.graph import freeze_session, load_graph_from_pb
+from adain import PKG_ROOT, PROJECT_ROOT
 if __name__ == '__main__':
-    import numpy as np
-    model = vgg_encoder(input_size=None)
-#     model.summary()
-#     
-    torch_params = []
-    for i in range(6):
-        fname_b = "../bias_{}.npy".format(i)
-        fname_w = "../weight_{}.npy".format(i)
-        bias = np.load(fname_b)
-        weight = np.load(fname_w)
-        torch_params.append([weight, bias])
-        print(weight.shape, bias.shape)
-#     
-#     
-    i = 0
-    for layer in model.layers:
-        params = layer.get_weights()
-          
-        if len(params) == 2:
-            weights, biases = params
-            print(layer.name, weights.shape, biases.shape)
-            layer.set_weights(torch_params[i])
-            i+=1
-     
-    model.save_weights("vgg_31.h5")
-#     model.load_weights("vgg_31.h5")
-#     y = model.predict(np.zeros((1,512,512,3)))
-#     print(y.shape)
+#     tf.keras.backend.set_learning_phase(0) # this line most important
+# 
+    ##########################################################################
+    pb_fname = "vgg_31.pb"
+    output_pb_fname = "vgg_31_opt.pb"
+    input_node = "input"
+    output_node = "block3_conv1/Relu"
+    ##########################################################################
+ 
+    model = vgg_encoder(input_size=256)
+    model.summary()
+         
+    # 1. to frozen pb
+    K = tf.keras.backend
+    frozen_graph = freeze_session(K.get_session(),
+                                  output_names=[out.op.name for out in model.outputs])
+    tf.train.write_graph(frozen_graph, "models", pb_fname, as_text=False)
+    # input_c,input_s  / output/mul
+    for t in model.inputs + model.outputs:
+        print("op name: {}, shape: {}".format(t.op.name, t.shape))
+   
+    cmd = 'python -m tensorflow.python.tools.optimize_for_inference \
+            --input models/{} \
+            --output {} \
+            --input_names={} \
+            --output_names={}'.format(pb_fname, output_pb_fname, input_node, output_node)
+    subprocess.call(cmd, shell=True)
     
+    sess = load_graph_from_pb(output_pb_fname)
+    print(sess)
+
+
+    graph_def_file = "models/" + pb_fname
+    graph_def_file = output_pb_fname
+    
+    input_arrays = ["input"]
+    output_arrays = [output_node]
+    
+    converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file,
+                                                          input_arrays,
+                                                          output_arrays,
+                                                          input_shapes={"input":[1,256,256,3]})
+    tflite_model = converter.convert()
+    open("vgg_31.tflite", "wb").write(tflite_model)
+     
     
