@@ -36,22 +36,17 @@ def vgg_encoder(input_size=256):
         # x = VggPreprocess()(x)
         x = Conv2D(3, (1, 1), activation=None, padding='same', name='block1_conv0')(x)
         
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv2')(x)
+        x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(x)
+        x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2')(x)
         x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
            
         # Block 2
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv2')(x)
+        x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
+        x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv2')(x)
         x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
            
         # Block 3
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv1')(x)
+        x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
 
 
 #         x = SpatialReflectionPadding()(x)
