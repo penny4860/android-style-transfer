@@ -30,22 +30,17 @@ def vgg_decoder(input_size=None):
         img_input = x
     
         # Block 3
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block3_conv1')(x)
+        x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
         x = tf.keras.layers.UpSampling2D()(x)
  
         # Block 2
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(128, (3, 3), activation='relu', padding='valid', name='block2_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block2_conv2')(x)
+        x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
+        x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block2_conv2')(x)
         x = tf.keras.layers.UpSampling2D()(x)
  
         # Block 1
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(64, (3, 3), activation='relu', padding='valid', name='block1_conv1')(x)
-        x = SpatialReflectionPadding()(x)
-        x = Conv2D(3, (3, 3), activation=None, padding='valid', name='block1_conv2')(x)
+        x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(x)
+        x = Conv2D(3, (3, 3), activation=None, padding='same', name='block1_conv2')(x)
         
         # Block 3
         model = Model(img_input, x, name='vgg19_decoder')
