@@ -41,9 +41,6 @@ if __name__ == '__main__':
     stylized_imgs = decoder.predict(cs_features)
  
     # 6. post process
-    stylized_imgs[stylized_imgs>1] = 1
-    stylized_imgs[stylized_imgs<0] = 0
-    stylized_imgs *= 255
     stylized_img = stylized_imgs[0].astype(np.uint8)
      
     # 7. plot
