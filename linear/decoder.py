@@ -2,6 +2,7 @@
 
 import tensorflow as tf
 import os
+from adain import PROJECT_ROOT
 
 # if USE_TF_KERAS:
 Input = tf.keras.layers.Input
@@ -49,14 +50,13 @@ def vgg_decoder(input_size=None):
     input_shape=[input_size,input_size,256]
     model = _build_model(input_shape)
     
-    fname = os.path.join(os.path.dirname(__file__), "vgg_decoder_31.h5")
+    fname = os.path.join(PROJECT_ROOT, "linear", "models", "h5", "vgg_decoder_31.h5")
     model.load_weights(fname, by_name=True)
     return model
 
 
 import subprocess
 from adain.graph import freeze_session, load_graph_from_pb
-from adain import PKG_ROOT, PROJECT_ROOT
 if __name__ == '__main__':
 #     tf.keras.backend.set_learning_phase(0) # this line most important
 # 

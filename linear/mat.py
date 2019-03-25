@@ -1,5 +1,8 @@
 
 import tensorflow as tf
+import os
+from adain import PROJECT_ROOT
+
 Input = tf.keras.layers.Input
 Layer = tf.keras.layers.Layer
 Model = tf.keras.models.Model
@@ -123,15 +126,13 @@ def build_model(input_shape=[64,64,256]):
     
     model = Model([input_c, input_s], x, name='mat')
     
-    import os
-    dname = os.path.dirname(__file__)
-    model.load_weights(os.path.join(dname, "mat.h5"))
+    fname = os.path.join(PROJECT_ROOT, "linear", "models", "h5", "mat.h5")
+    model.load_weights(fname)
     return model
 
 
 import subprocess
 from adain.graph import freeze_session, load_graph_from_pb
-from adain import PKG_ROOT, PROJECT_ROOT
 if __name__ == '__main__':
 #     tf.keras.backend.set_learning_phase(0) # this line most important
 # 
