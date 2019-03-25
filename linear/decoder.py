@@ -3,6 +3,7 @@
 import tensorflow as tf
 import os
 from adain import PROJECT_ROOT
+from adain.layers import PostPreprocess
 
 # if USE_TF_KERAS:
 Input = tf.keras.layers.Input
@@ -29,6 +30,7 @@ def vgg_decoder(input_size=None):
         # Block 1
         x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(x)
         x = Conv2D(3, (3, 3), activation=None, padding='same', name='block1_conv2')(x)
+        x = PostPreprocess()(x)
         
         # Block 3
         model = Model(img_input, x, name='vgg19_decoder')
