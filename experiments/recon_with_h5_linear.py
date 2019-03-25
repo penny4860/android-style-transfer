@@ -7,7 +7,6 @@ from adain.utils import preprocess, plot
 
 content_fname="../input/content/chicago.jpg"
 style_fname="../input/style/asheville.jpg"
-alpha = 1.0
 img_size = 416
 
 if __name__ == '__main__':
