@@ -3,25 +3,13 @@
 import tensorflow as tf
 import os
 from adain import PROJECT_ROOT
+from adain.layers import PostPreprocess
 
 # if USE_TF_KERAS:
 Input = tf.keras.layers.Input
 Conv2D = tf.keras.layers.Conv2D
 Layer = tf.keras.layers.Layer
 Model = tf.keras.models.Model
-VGG19 = tf.keras.applications.vgg19.VGG19
-
-
-class SpatialReflectionPadding(Layer):
-
-    def __init__(self, **kwargs):
-        super(SpatialReflectionPadding, self).__init__(**kwargs)
-
-    def compute_output_shape(self, input_shape):
-        return (input_shape[0], input_shape[1]+2, input_shape[2]+2, input_shape[3])
-
-    def call(self, x):
-        return tf.pad(x, tf.constant([[0,0], [1,1], [1,1], [0,0]]), mode="REFLECT")
 
 
 def vgg_decoder(input_size=None):
@@ -42,6 +30,7 @@ def vgg_decoder(input_size=None):
         # Block 1
         x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(x)
         x = Conv2D(3, (3, 3), activation=None, padding='same', name='block1_conv2')(x)
+        x = PostPreprocess()(x)
         
         # Block 3
         model = Model(img_input, x, name='vgg19_decoder')
