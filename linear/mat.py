@@ -129,6 +129,52 @@ def build_model(input_shape=[64,64,256]):
     return model
 
 
+import subprocess
+from adain.graph import freeze_session, load_graph_from_pb
+from adain import PKG_ROOT, PROJECT_ROOT
 if __name__ == '__main__':
+#     tf.keras.backend.set_learning_phase(0) # this line most important
+# 
+    ##########################################################################
+    pb_fname = "mat_31.pb"
+    output_pb_fname = "mat_31_opt.pb"
+    input_node = "input_c,input_s"
+    output_node = "mean_add/add"
+    ##########################################################################
+ 
     model = build_model()
     model.summary()
+         
+#     # 1. to frozen pb
+#     K = tf.keras.backend
+#     frozen_graph = freeze_session(K.get_session(),
+#                                   output_names=[out.op.name for out in model.outputs])
+#     tf.train.write_graph(frozen_graph, "models", pb_fname, as_text=False)
+#     # input_c,input_s  / output/mul
+#     for t in model.inputs + model.outputs:
+#         print("op name: {}, shape: {}".format(t.op.name, t.shape))
+#       
+#     cmd = 'python -m tensorflow.python.tools.optimize_for_inference \
+#             --input models/{} \
+#             --output {} \
+#             --input_names={} \
+#             --output_names={}'.format(pb_fname, output_pb_fname, input_node, output_node)
+#     subprocess.call(cmd, shell=True)
+#        
+#     sess = load_graph_from_pb(output_pb_fname)
+#     print(sess)
+   
+  
+    graph_def_file = "models/" + pb_fname
+    graph_def_file = output_pb_fname
+      
+    input_arrays = ["input_c", "input_s"]
+    output_arrays = [output_node]
+      
+    converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file,
+                                                          input_arrays,
+                                                          output_arrays,
+                                                          input_shapes={"input_c":[1,64,64,256], "input_s":[1,64,64,256]})
+    tflite_model = converter.convert()
+    open("mat_31.tflite", "wb").write(tflite_model)
+
