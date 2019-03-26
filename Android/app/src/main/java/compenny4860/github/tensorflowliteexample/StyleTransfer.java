@@ -16,11 +16,13 @@ public class StyleTransfer {
 
     private Encoder encoder;
     private Decoder decoder;
+    private Mat mat;
 
     StyleTransfer(Activity activity) throws IOException {
         Log.d(TAG, "Constructor");
         encoder = new Encoder(activity);
         decoder = new Decoder(activity);
+        mat = new Mat(activity);
         Log.d(TAG, "Tensorflow model initialized");
     }
 
@@ -35,8 +37,9 @@ public class StyleTransfer {
     public void run(final Bitmap contentBitmap, final Bitmap styleBitmap) {
         Log.d(TAG, "style running");
 
-        float[] contentFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
-        float[] styleFeatureValues = new float[contentBitmap.getWidth()/8 * contentBitmap.getHeight()/8 * 512];
+        float[] contentFeatureValues = new float[contentBitmap.getWidth()/4 * contentBitmap.getHeight()/4 * 256];
+        float[] styleFeatureValues = new float[contentBitmap.getWidth()/4 * contentBitmap.getHeight()/4 * 256];
+        float[] csFeatureValues = new float[contentBitmap.getWidth()/4 * contentBitmap.getHeight()/4 * 256];
         float[] stylized_img = new float[contentBitmap.getWidth() * contentBitmap.getHeight() * 3];
         long startTime, endTime;
 
@@ -51,16 +54,20 @@ public class StyleTransfer {
         endTime = SystemClock.uptimeMillis();
         Log.d(TAG, "    1. Timecost to extract features: " + Long.toString(endTime - startTime));
 
+        startTime = SystemClock.uptimeMillis();
+        mat.run(csFeatureValues, contentFeatureValues, styleFeatureValues, mImgSize/4);
+        endTime = SystemClock.uptimeMillis();
+        Log.d(TAG, "    2. Timecost to mixing: " + Long.toString(endTime - startTime));
+
         // 3. Recon stylized image
         startTime = SystemClock.uptimeMillis();
-        decoder.run(stylized_img, contentFeatureValues, styleFeatureValues, mImgSize/8);
+        decoder.run(stylized_img, csFeatureValues, mImgSize/4);
         endTime = SystemClock.uptimeMillis();
-        Log.d(TAG, "    2. Timecost to decoding: " + Long.toString(endTime - startTime));
+        Log.d(TAG, "    3. Timecost to decoding: " + Long.toString(endTime - startTime));
 
         // 4. Set bitmap
         setBitmap(contentBitmap, stylized_img);
         Log.d(TAG, "set bitmap");
-
     }
 
     private void getFloatValues(final Bitmap bitmap) {

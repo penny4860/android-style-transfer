@@ -166,7 +166,7 @@ public class ImageFragment extends Fragment {
         Log.d(TAG, "Running." + original_h + ", " + original_w);
 
         {
-            int size = 512;
+            int size = 256;
             styleTransfer.setSize(size);
 
             contentBitmap = Bitmap.createScaledBitmap(contentBitmap, size, size, true);
