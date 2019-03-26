@@ -9,7 +9,7 @@ public class Decoder {
     private static final String MODEL_DECODER_FILE = "decoder_31_opt.pb";
 
     private static final String INPUT_C_NODE = "input";
-    private static final String OUTPUT_NODE = "block1_conv2/BiasAdd";
+    private static final String OUTPUT_NODE = "post_preprocess/mul";
 
     Decoder(Activity activity) {
         decoderInterface = new TensorFlowInferenceInterface(activity.getAssets(), MODEL_DECODER_FILE);
