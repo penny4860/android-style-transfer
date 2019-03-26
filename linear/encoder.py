@@ -36,19 +36,6 @@ def vgg_encoder(input_size=256):
            
         # Block 3
         x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
-
-
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv2')(x)
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv3')(x)
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(256, (3, 3), activation='relu', padding='valid', name='block3_conv4')(x)
-#         x = MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(x)
-#         
-#         # Block 4
-#         x = SpatialReflectionPadding()(x)
-#         x = Conv2D(512, (3, 3), activation='relu', padding='valid', name="output")(x)
         model = Model(img_input, x, name='vgg19')
         return model
 
