@@ -15,6 +15,67 @@ Layer = tf.keras.layers.Layer
 Model = tf.keras.models.Model
 VGG19 = tf.keras.applications.vgg19.VGG19
 
+DepthwiseConv2D = tf.keras.layers.DepthwiseConv2D
+Activation = tf.keras.layers.Activation
+
+
+def mobile_encoder(input_size=256, fname=None):
+    def _build_model(input_shape):
+        x = Input(shape=input_shape, name="input")
+        img_input = x
+    
+        x = VggPreprocess()(x)
+
+        # Block 1
+        x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(x)
+        
+        # x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2')(x)
+        x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+        x = Conv2D(64, (1, 1), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+        x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
+           
+        # Block 2
+        # x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
+        x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+        x = Conv2D(128, (1, 1), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+
+        # x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv2')(x)
+        x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+        x = Conv2D(128, (1, 1), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+        x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
+           
+        # Block 3
+        # x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
+        x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+        x = Conv2D(256, (1, 1), use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
+
+        model = Model(img_input, x, name='mobile_encoder_31')
+        return model
+
+    input_shape=[input_size,input_size,3]
+    model = _build_model(input_shape)
+    
+    # fname = os.path.join(PROJECT_ROOT, "linear", "models", "h5", "vgg_31.h5")
+    if fname is not None:
+        model.load_weights(fname, by_name=True)
+    return model
+
 
 def vgg_encoder(input_size=256):
     
