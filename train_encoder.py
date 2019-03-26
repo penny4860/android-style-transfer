@@ -58,7 +58,9 @@ if __name__ == '__main__':
                                      input_size=input_size)
     valid_generator = BatchGenerator(valid_fnames,
                                      batch_size=min(args.batch_size, len(train_fnames)),
-                                     shuffle=False)
+                                     truth_model=teacher_model,
+                                     shuffle=False,
+                                     input_size=input_size)
     
     # 2. create loss function
     student_model.compile(loss="mean_squared_error",
