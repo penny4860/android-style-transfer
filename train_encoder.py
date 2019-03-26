@@ -9,7 +9,7 @@ np.random.seed(1337)
 from adain.generator import BatchGenerator, create_callbacks
 from linear.encoder import vgg_encoder, mobile_encoder
 
-DEFAULT_IMG_ROOT = os.path.join("experiments", "imgs")
+DEFAULT_IMG_ROOT = "/home/jjs/git/dataset/coco/val2017"
 DEFAULT_BATCH_SIZE = 8
 DEFAULT_LEARNING_RATE = 0.01
 DEFAULT_INIT_WEIGHTS = os.path.join("experiments", "mobile_encoder.h5")
@@ -43,16 +43,22 @@ if __name__ == '__main__':
     
     input_size = 256
     teacher_model = vgg_encoder(input_size)
-    student_model = mobile_encoder(input_size)
+    student_model = mobile_encoder(input_size, "mobile_encoder.h5")
     
     fnames = glob.glob(args.image_root + "/*.jpg")
+    n_train_files = int(len(fnames)*0.9)
+    train_fnames = fnames[:n_train_files]
+    valid_fnames = fnames[n_train_files:]
+    
     print("{}-files to train".format(len(fnames)))
-    train_generator = BatchGenerator(fnames,
-                                     batch_size=min(args.batch_size, len(fnames)),
-                                     shuffle=False,
+    train_generator = BatchGenerator(train_fnames,
+                                     batch_size=min(args.batch_size, len(train_fnames)),
+                                     shuffle=True,
                                      truth_model=teacher_model,
                                      input_size=input_size)
-    # valid_generator = BatchGenerator(fnames[160:], batch_size=4, shuffle=False)
+    valid_generator = BatchGenerator(valid_fnames,
+                                     batch_size=min(args.batch_size, len(train_fnames)),
+                                     shuffle=False)
     
     # 2. create loss function
     student_model.compile(loss="mean_squared_error",
