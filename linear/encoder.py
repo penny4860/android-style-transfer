@@ -63,7 +63,7 @@ def mobile_encoder(input_size=256, fname=None):
         x = Activation("relu")(x)
         x = Conv2D(256, (1, 1), use_bias=False, padding='same')(x)
         x = BatchNormalization(fused=False)(x)
-        x = Activation("relu")(x)
+        x = Activation("relu", name="block3_conv1")(x)
 
         model = Model(img_input, x, name='mobile_encoder_31')
         return model
