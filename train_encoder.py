@@ -68,6 +68,6 @@ if __name__ == '__main__':
     student_model.fit_generator(train_generator,
                                 steps_per_epoch=len(train_generator),
                                 callbacks=create_callbacks(),
-                                validation_data  = train_generator,
-                                validation_steps = len(train_generator),
+                                validation_data  = valid_generator,
+                                validation_steps = len(valid_generator),
                                 epochs=1000)
