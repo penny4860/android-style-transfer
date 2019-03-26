@@ -5,7 +5,7 @@ import keras
 import os
 from adain import PROJECT_ROOT
 from adain.layers import VggPreprocess
-from linear import USE_TF_KERAS
+from adain import USE_TF_KERAS
 
 if USE_TF_KERAS:
     Input = tf.keras.layers.Input
