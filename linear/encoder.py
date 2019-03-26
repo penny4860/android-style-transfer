@@ -27,7 +27,9 @@ def mobile_encoder(input_size=256, fname=None):
         x = VggPreprocess()(x)
 
         # Block 1
-        x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(x)
+        x = Conv2D(32, (3, 3), strides=2, use_bias=False, padding='same')(x)
+        x = BatchNormalization(fused=False)(x)
+        x = Activation("relu")(x)
         
         # x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2')(x)
         x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
@@ -36,11 +38,11 @@ def mobile_encoder(input_size=256, fname=None):
         x = Conv2D(64, (1, 1), use_bias=False, padding='same')(x)
         x = BatchNormalization(fused=False)(x)
         x = Activation("relu")(x)
-        x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
+#         x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
            
         # Block 2
         # x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
-        x = DepthwiseConv2D((3, 3), use_bias=False, padding='same')(x)
+        x = DepthwiseConv2D((3, 3), strides=2, use_bias=False, padding='same')(x)
         x = BatchNormalization(fused=False)(x)
         x = Activation("relu")(x)
         x = Conv2D(128, (1, 1), use_bias=False, padding='same')(x)
@@ -54,7 +56,7 @@ def mobile_encoder(input_size=256, fname=None):
         x = Conv2D(128, (1, 1), use_bias=False, padding='same')(x)
         x = BatchNormalization(fused=False)(x)
         x = Activation("relu")(x)
-        x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
+#         x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
            
         # Block 3
         # x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
