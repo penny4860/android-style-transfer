@@ -113,13 +113,13 @@ if __name__ == '__main__':
 #     tf.keras.backend.set_learning_phase(0) # this line most important
 # 
     ##########################################################################
-    pb_fname = "vgg_31.pb"
-    output_pb_fname = "vgg_31_opt.pb"
+    pb_fname = "mobile_31.pb"
+    output_pb_fname = "mobile_31_opt.pb"
     input_node = "input"
     output_node = "block3_conv1/Relu"
     ##########################################################################
  
-    model = vgg_encoder(input_size=256)
+    model = mobile_encoder(input_size=256)
     model.summary()
          
     # 1. to frozen pb
@@ -142,17 +142,17 @@ if __name__ == '__main__':
     print(sess)
 
 
-    graph_def_file = "models/" + pb_fname
-    graph_def_file = output_pb_fname
-    
-    input_arrays = ["input"]
-    output_arrays = [output_node]
-    
-    converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file,
-                                                          input_arrays,
-                                                          output_arrays,
-                                                          input_shapes={"input":[1,256,256,3]})
-    tflite_model = converter.convert()
-    open("vgg_31.tflite", "wb").write(tflite_model)
-     
+#     graph_def_file = "models/" + pb_fname
+#     graph_def_file = output_pb_fname
+#     
+#     input_arrays = ["input"]
+#     output_arrays = [output_node]
+#     
+#     converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file,
+#                                                           input_arrays,
+#                                                           output_arrays,
+#                                                           input_shapes={"input":[1,256,256,3]})
+#     tflite_model = converter.convert()
+#     open("vgg_31.tflite", "wb").write(tflite_model)
+#      
     
