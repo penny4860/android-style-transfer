@@ -1,10 +1,9 @@
 
 # import modules
 import numpy as np
-# import tensorflow as tf
+import tensorflow as tf
 import os
 import glob
-import keras
 
 np.random.seed(1337)
 from adain.generator import BatchGenerator, create_callbacks
@@ -46,7 +45,7 @@ if __name__ == '__main__':
     teacher_model = vgg_encoder(input_size)
     student_model = mobile_encoder(input_size)
     
-    fnames = glob.glob(args.image_root + "/**/*.jpg")
+    fnames = glob.glob(args.image_root + "/*.jpg")
     print("{}-files to train".format(len(fnames)))
     train_generator = BatchGenerator(fnames,
                                      batch_size=min(args.batch_size, len(fnames)),
@@ -57,7 +56,7 @@ if __name__ == '__main__':
     
     # 2. create loss function
     student_model.compile(loss="mean_squared_error",
-                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
+                  optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
     student_model.fit_generator(train_generator,
                                 steps_per_epoch=len(train_generator),
                                 callbacks=create_callbacks(),
