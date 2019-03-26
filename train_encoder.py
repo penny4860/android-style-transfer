@@ -1,7 +1,7 @@
 
 # import modules
 import numpy as np
-import tensorflow as tf
+import keras
 import os
 import glob
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     
     # 2. create loss function
     student_model.compile(loss="mean_squared_error",
-                  optimizer=tf.keras.optimizers.Adam(lr=args.learning_rate))
+                  optimizer=keras.optimizers.Adam(lr=args.learning_rate))
     student_model.fit_generator(train_generator,
                                 steps_per_epoch=len(train_generator),
                                 callbacks=create_callbacks(),
