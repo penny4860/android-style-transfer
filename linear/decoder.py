@@ -53,7 +53,7 @@ if __name__ == '__main__':
     pb_fname = "decoder_31.pb"
     output_pb_fname = "decoder_31_opt.pb"
     input_node = "input"
-    output_node = "block1_conv2/BiasAdd"
+    output_node = "post_preprocess/mul"
     ##########################################################################
  
     model = vgg_decoder(input_size=64)
