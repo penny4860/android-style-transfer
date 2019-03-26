@@ -10,7 +10,7 @@ from adain.generator import BatchGenerator, create_callbacks
 from linear.encoder import vgg_encoder, mobile_encoder
 
 DEFAULT_IMG_ROOT = "/home/jjs/git/dataset/coco/val2017"
-DEFAULT_BATCH_SIZE = 8
+DEFAULT_BATCH_SIZE = 64
 DEFAULT_LEARNING_RATE = 0.01
 DEFAULT_INIT_WEIGHTS = os.path.join("experiments", "mobile_encoder.h5")
 DEFAULT_VGG_WEIGHTS = os.path.join("adain", "models", "vgg_encoder.h5")
