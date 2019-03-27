@@ -2,20 +2,20 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
+    android:layout_width="75dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="1dp">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:layout_width="match_parent" />
     <TextView
         android:id="@+id/imageFilename"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#b839a5ab"
+        android:textColor="#b8f4fafa"
         android:background="#c3212121"
         android:layout_width="match_parent" />
 
