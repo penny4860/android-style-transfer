@@ -5,7 +5,7 @@ import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 public class Encoder {
     private TensorFlowInferenceInterface encoderInterface;
-    private static final String MODEL_ENCODER_FILE = "vgg_31_opt.pb";
+    private static final String MODEL_ENCODER_FILE = "mobile_31_opt.pb";
     private static final String INPUT_NODE = "input";
     private static final String OUTPUT_NODE = "block3_conv1/Relu";
 

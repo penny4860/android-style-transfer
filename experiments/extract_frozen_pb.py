@@ -6,19 +6,17 @@ from adain.graph import freeze_session, load_graph_from_pb
 from adain import PKG_ROOT, PROJECT_ROOT
 
 if __name__ == '__main__':
-    from adain.encoder import vgg_encoder, mobile_encoder
-    from adain.transfer_decoder import build_mobile_combine_decoder
+    from linear.encoder import vgg_encoder, mobile_encoder
     tf.keras.backend.set_learning_phase(0) # this line most important
 
     ##########################################################################
-    pb_fname = "decoder.pb"
-    output_pb_fname = "mobile_decoder_opt.pb"
-    input_node = "input_c,input_s"
-    output_node = "output_1/mul"
+    pb_fname = "mobile_31.pb"
+    output_pb_fname = "mobile_31_opt.pb"
+    input_node = "input"
+    output_node = "block3_conv1/Relu"
     ##########################################################################
 
-    model = build_mobile_combine_decoder(include_post_process=True)
-    model.load_weights(PROJECT_ROOT + "/mobile_decoder_block3.h5", by_name=True)
+    model = mobile_encoder()
     model.summary()
         
     # 1. to frozen pb
@@ -36,7 +34,7 @@ if __name__ == '__main__':
             --input_names={} \
             --output_names={}'.format(pb_fname, output_pb_fname, input_node, output_node)
     subprocess.call(cmd, shell=True)
- 
+  
     sess = load_graph_from_pb(output_pb_fname)
     print(sess)
 
