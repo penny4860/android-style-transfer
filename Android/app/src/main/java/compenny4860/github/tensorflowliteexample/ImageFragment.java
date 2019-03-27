@@ -62,9 +62,9 @@ public class ImageFragment extends Fragment {
         /////////////////////////////////////////////////////////////////////////////////////////
         mFileList.addLast("sketch.jpg");
         mFileList.addLast("orient.jpg");
-        mFileList.addLast("picasso_la_muse.jpg");
-        mFileList.addLast("picasso_seated_nude_hr.jpg");
-        mFileList.addLast("picasso_self_portrait.jpg");
+        mFileList.addLast("picasso1.jpg");
+        mFileList.addLast("picasso2.jpg");
+        mFileList.addLast("picasso3.jpg");
         mFileList.addLast("matisse.jpg");
         mFileList.addLast("Armand.jpg");
         mFileList.addLast("cox.jpg");
