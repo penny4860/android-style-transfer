@@ -113,8 +113,8 @@ def mobile_encoder(input_size=256, fname=None):
     input_shape=[input_size,input_size,3]
     model = _build_model(input_shape)
     
-    # fname = os.path.join(PROJECT_ROOT, "linear", "models", "h5", "vgg_31.h5")
     if fname is not None:
+        fname = os.path.join(PROJECT_ROOT, "linear", "models", "h5", "mobile_31.h5")
         model.load_weights(fname, by_name=True)
     return model
 
