@@ -16,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -39,6 +42,7 @@ public class ImageFragment extends Fragment {
     private PickPicture mPickPicture;
     /////////////////////////////////////////////////////////////////////////////////
 
+    private AdView mAdView;
 
     public ImageFragment() {
         // Required empty public constructor
@@ -55,6 +59,10 @@ public class ImageFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_image, container, false);
         styleImageView = v.findViewById(R.id.styleImageView);
+
+        mAdView = v.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Todo: bitmap 객체를 효율적으로 갖고있는 방법 조사.
         contentBitmap = ((BitmapDrawable)styleImageView.getDrawable()).getBitmap();
