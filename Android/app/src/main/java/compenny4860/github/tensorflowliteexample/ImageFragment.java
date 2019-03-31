@@ -60,9 +60,21 @@ public class ImageFragment extends Fragment {
         contentBitmap = ((BitmapDrawable)styleImageView.getDrawable()).getBitmap();
 
         /////////////////////////////////////////////////////////////////////////////////////////
-        for (int i = 0; i < 26; i++) {
-            mFileList.addLast("style" + i + ".jpg");
-        }
+        mFileList.addLast("sketch.jpg");
+        mFileList.addLast("orient.jpg");
+        mFileList.addLast("picasso1.jpg");
+        mFileList.addLast("picasso2.jpg");
+        mFileList.addLast("picasso3.jpg");
+        mFileList.addLast("matisse.jpg");
+        mFileList.addLast("Armand.jpg");
+        mFileList.addLast("cox.jpg");
+        mFileList.addLast("mondrian.jpg");
+        mFileList.addLast("Wolfgang.jpg");
+        mFileList.addLast("flower_of_life.jpg");
+        mFileList.addLast("oil_paint.jpg");
+        mFileList.addLast("still_life.jpg");
+        mFileList.addLast("watercolor.jpg");
+        ////////////////////////////////////////////////////////////////////////////////////////
         // 1. recycler view.
         mRecyclerView = v.findViewById(R.id.recyclerview);
         // 2. adapter
