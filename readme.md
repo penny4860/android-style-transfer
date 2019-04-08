@@ -1,20 +1,20 @@
-[![Build Status](https://travis-ci.org/penny4860/keras-adain-style-transfer.svg?branch=master)](https://travis-ci.org/penny4860/keras-adain-style-transfer) [![codecov](https://codecov.io/gh/penny4860/keras-adain-style-transfer/branch/master/graph/badge.svg)](https://codecov.io/gh/penny4860/keras-adain-style-transfer)
 
+# Style Transfer Android App
 
-# keras implementation of AdaIN Style Transfer
+Android application source code of Arbitrary Style Transfer using Tensorflow Mobile. This project includes both python code and Android code for creating a style transfer Android app.
 
-Keras implementation of [Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization](https://arxiv.org/abs/1703.06868).
+<img src="results/readme.png" width="500"> 
 
-<img src="results/examples.png" width="500"> 
+## Usage android code
 
+The source code for the Android application is in the ```project-root/Android``` directory. Please open and run the project through Android Studio. I can not run it on the Android emulator due to the problem of tensor flow.
 
-## Usage for python code
+## Usage python code
 
 #### 1. Requirement
 
 * python 3.6
-* anaconda 5.1.0
-* tensorflow 1.9.0
+* tensorflow 1.13.1
 * opencv 3.4.3.18
 * Etc.
 
@@ -22,31 +22,19 @@ Keras implementation of [Arbitrary Style Transfer in Real-time with Adaptive Ins
 I recommend that you create and use an anaconda env that is independent of your project. You can create anaconda env for this project by following these simple steps. This process has been verified on Windows 10 and ubuntu 16.04.
 
 ```
-$ conda create -n adain python=3.6 anaconda=5.1.0
-$ activate adain # in linux "source activate adain"
-(adain) $ pip install tensorflow==1.9.0
+$ conda create -n style python=3.6
+$ activate style # in linux "source activate style"
+(adain) $ pip install tensorflow==1.13.1
 (adain) $ pip install opencv-python==3.4.3.18
-(adain) $ pip install pytest-cov
-(adain) $ pip install codecov
 ```
 
-### 2. Run style transfer 
+### 2. Run style transfer in python
 
-Run style transfer through the following command.
+(working on)
 
-* ```(adain) project/root> python main.py -c input/content/brad_pitt.jpg -s input/style/sketch.png```
+### 3. Apply tensorflow model to Android
 
-You can see the following results:
-
-* <img src="results/sketch.png" height="250">
-
-
-## Pretrained weights
-
-
-This repository contains a [pretrained weight file](pretrained/adain.h5). 
-This weight file is the conversion of the torch format weight file provided in the [original project repository](https://github.com/xunhuang1995/AdaIN-style) to keras format. I used the [torchfile](https://github.com/bshillingford/python-torchfile) to read the torch format file.
-
+(working on)
 
 
 ## Copyright
