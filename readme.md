@@ -3,7 +3,7 @@
 
 Android application source code of Arbitrary Style Transfer using Tensorflow Mobile. This project includes both python code and Android code for creating a style transfer Android app.
 
-<img src="results/readme.png" width="500"> 
+<img src="results/readme.png" width="800"> 
 
 ## Usage android code
 
