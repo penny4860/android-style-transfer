@@ -1,13 +1,13 @@
 
 
 import tensorflow as tf
-import keras
 from adain import USE_TF_KERAS
 
 
 if USE_TF_KERAS:
     Layer = tf.keras.layers.Layer
 else:
+    import keras
     Layer = keras.layers.Layer
 
 

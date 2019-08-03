@@ -3,7 +3,6 @@
 import numpy as np
 import os
 import tensorflow as tf
-import keras
 
 np.random.seed(1337)
 from adain import MODEL_ROOT, USE_TF_KERAS
@@ -27,6 +26,7 @@ if USE_TF_KERAS:
     BatchNormalization = tf.keras.layers.BatchNormalization
     Activateion = tf.keras.layers.Activation
 else:
+    import keras
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
     Model = keras.models.Model

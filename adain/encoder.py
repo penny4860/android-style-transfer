@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-import keras
 import os
 
 from adain import USE_TF_KERAS
@@ -23,6 +22,7 @@ if USE_TF_KERAS:
     Model = tf.keras.models.Model
     VGG19 = tf.keras.applications.vgg19.VGG19
 else:
+    import keras
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
     DepthwiseConv2D = keras.layers.DepthwiseConv2D
