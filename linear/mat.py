@@ -18,7 +18,8 @@ class MeanSub(Layer):
         return input_shape
 
     def call(self, x):
-        x = x - tf.reduce_mean(x, [1,2], keep_dims=True)
+        # x = x - tf.reduce_mean(x, [1,2], keep_dims=True)
+        x = x - tf.reduce_mean(x, [1,2])
         return x
 
 class Flat(Layer):
@@ -91,7 +92,8 @@ class MeanAdd(Layer):
 
     def call(self, xs):
         x, input_s = xs
-        style_mean = tf.reduce_mean(input_s, [1,2], keep_dims=True)
+        # style_mean = tf.reduce_mean(input_s, [1,2], keep_dims=True)
+        style_mean = tf.reduce_mean(input_s, [1,2])
         return x + style_mean
 
 
