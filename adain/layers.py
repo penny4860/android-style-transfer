@@ -61,8 +61,8 @@ class AdaIN(Layer):
         assert isinstance(x, list)
         # Todo : args
         content_features, style_features = x[0], x[1]
-        style_mean, style_variance = tf.nn.moments(style_features, [1,2], keep_dims=True)
-        content_mean, content_variance = tf.nn.moments(content_features, [1,2], keep_dims=True)
+        style_mean, style_variance = tf.nn.moments(style_features, [1,2])
+        content_mean, content_variance = tf.nn.moments(content_features, [1,2])
         epsilon = 1e-5
         normalized_content_features = tf.nn.batch_normalization(content_features, content_mean,
                                                                 content_variance, style_mean, 
