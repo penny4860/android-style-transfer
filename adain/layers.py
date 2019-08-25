@@ -19,7 +19,7 @@ class VggPreprocess(Layer):
     def call(self, x):
         import numpy as np
         # RGB->BGR
-        x = tf.reverse(x, axis=[-1])
+        x = tf.reverse(x, axis=[3])
         x = x - tf.constant(np.array([103.939, 116.779, 123.68], dtype=np.float32))
         return x
 
