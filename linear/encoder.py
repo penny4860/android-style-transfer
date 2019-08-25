@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-import keras
 import os
 from adain import PROJECT_ROOT
 from adain.layers import VggPreprocess
@@ -19,6 +18,7 @@ if USE_TF_KERAS:
     DepthwiseConv2D = tf.keras.layers.DepthwiseConv2D
     Activation = tf.keras.layers.Activation
 else:
+    import keras
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
     BatchNormalization = keras.layers.BatchNormalization

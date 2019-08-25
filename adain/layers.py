@@ -1,13 +1,13 @@
 
 
 import tensorflow as tf
-import keras
 from adain import USE_TF_KERAS
 
 
 if USE_TF_KERAS:
     Layer = tf.keras.layers.Layer
 else:
+    import keras
     Layer = keras.layers.Layer
 
 
@@ -19,7 +19,7 @@ class VggPreprocess(Layer):
     def call(self, x):
         import numpy as np
         # RGB->BGR
-        x = tf.reverse(x, axis=[-1])
+        x = tf.reverse(x, axis=[3])
         x = x - tf.constant(np.array([103.939, 116.779, 123.68], dtype=np.float32))
         return x
 
@@ -61,8 +61,8 @@ class AdaIN(Layer):
         assert isinstance(x, list)
         # Todo : args
         content_features, style_features = x[0], x[1]
-        style_mean, style_variance = tf.nn.moments(style_features, [1,2], keep_dims=True)
-        content_mean, content_variance = tf.nn.moments(content_features, [1,2], keep_dims=True)
+        style_mean, style_variance = tf.nn.moments(style_features, [1,2])
+        content_mean, content_variance = tf.nn.moments(content_features, [1,2])
         epsilon = 1e-5
         normalized_content_features = tf.nn.batch_normalization(content_features, content_mean,
                                                                 content_variance, style_mean, 

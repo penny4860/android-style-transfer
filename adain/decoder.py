@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-import keras
 import os
 
 from adain import USE_TF_KERAS, MODEL_ROOT
@@ -21,6 +20,7 @@ if USE_TF_KERAS:
     Activateion = tf.keras.layers.Activation
 
 else:
+    import keras
     Input = keras.layers.Input
     Conv2D = keras.layers.Conv2D
     Model = keras.models.Model
